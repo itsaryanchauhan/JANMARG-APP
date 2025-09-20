@@ -38,6 +38,25 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos for reports.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photo library to add images to reports."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationForegroundPermission": "Allow $(PRODUCT_NAME) to access your location to automatically capture incident locations."
+        }
       ]
     ],
     "experiments": {
