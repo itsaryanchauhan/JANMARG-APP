@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { mockAreas, mockCommunityReports } from "../data/mock/communityReports";
+import { mockAreas, mockCommunityReports } from "../data/mock";
 
 export interface CommunityReport {
   id: string;
