@@ -1,17 +1,46 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from "react-native";
-import { useReports } from "../context/ReportsContext";
+import ReportDetailModal from "../components/ReportDetailModal";
+import { useReports, Report } from "../context/ReportsContext";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function MyReportsScreen() {
   const { reports } = useReports();
+  const { t } = useLanguage();
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [showReportDetail, setShowReportDetail] = useState(false);
+
+  const handleReportPress = (report: Report) => {
+    setSelectedReport(report);
+    setShowReportDetail(true);
+  };
+
+  // Convert Report to CommunityReport for modal compatibility
+  const convertToCommunityReport = (report: Report) => {
+    return {
+      ...report,
+      location: {
+        latitude: report.location?.latitude || 0,
+        longitude: report.location?.longitude || 0,
+        address: report.location?.address || 'Unknown Address',
+        area: 'My Area',
+      },
+      reporter: {
+        name: report.isAnonymous ? 'Anonymous' : 'You',
+        avatar: undefined,
+      },
+      upvotes: 0,
+      hasUserUpvoted: false,
+    };
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -44,8 +73,10 @@ export default function MyReportsScreen() {
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours} hours ago`;
     if (diffInHours < 48) return "1 day ago";
@@ -57,7 +88,9 @@ export default function MyReportsScreen() {
       <View style={styles.header}>
         <Ionicons name="document-text" size={32} color="#e32f45" />
         <Text style={styles.title}>My Reports</Text>
-        <Text style={styles.subtitle}>Track your submitted reports and their status</Text>
+        <Text style={styles.subtitle}>
+          Track your submitted reports and their status
+        </Text>
       </View>
 
       {reports.length === 0 ? (
@@ -78,40 +111,67 @@ export default function MyReportsScreen() {
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>
-                {reports.filter(r => r.status === 'submitted').length}
+                {reports.filter((r) => r.status === "submitted").length}
               </Text>
               <Text style={styles.statLabel}>Pending</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <Text style={styles.statNumber}>
-                {reports.filter(r => r.status === 'resolved').length}
+                {reports.filter((r) => r.status === "resolved").length}
               </Text>
               <Text style={styles.statLabel}>Resolved</Text>
             </View>
           </View>
 
           {reports.map((report) => (
-            <TouchableOpacity key={report.id} style={styles.reportCard}>
+            <TouchableOpacity 
+              key={report.id} 
+              style={styles.reportCard}
+              onPress={() => handleReportPress(report)}
+            >
               <View style={styles.reportHeader}>
-                <View style={[styles.iconContainer, { backgroundColor: getStatusColor(report.status) + '20' }]}>
-                  <Ionicons 
-                    name={getIssueTypeIcon(report.type) as any} 
-                    size={24} 
-                    color={getStatusColor(report.status)} 
+                <View
+                  style={[
+                    styles.iconContainer,
+                    { backgroundColor: getStatusColor(report.status) + "20" },
+                  ]}
+                >
+                  <Ionicons
+                    name={getIssueTypeIcon(report.type) as any}
+                    size={24}
+                    color={getStatusColor(report.status)}
                   />
                 </View>
                 <View style={styles.reportContent}>
-                  <Text style={styles.reportTitle}>{report.title}</Text>
-                  <Text style={styles.reportTime}>{formatDate(report.timestamp)}</Text>
-                  <View style={[styles.statusBadge, { backgroundColor: getStatusColor(report.status) }]}>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.reportTitle}>{report.title}</Text>
+                    {report.isAnonymous && (
+                      <View style={styles.anonymousTag}>
+                        <Text style={styles.anonymousText}>{t('anonymous')}</Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={styles.reportTime}>
+                    {formatDate(report.timestamp)}
+                  </Text>
+                  <View
+                    style={[
+                      styles.statusBadge,
+                      { backgroundColor: getStatusColor(report.status) },
+                    ]}
+                  >
                     <Text style={styles.statusText}>
-                      {report.status.charAt(0).toUpperCase() + report.status.slice(1).replace('-', ' ')}
+                      {report.status.charAt(0).toUpperCase() +
+                        report.status.slice(1).replace("-", " ")}
                     </Text>
                   </View>
                 </View>
                 {report.imageUri && (
-                  <Image source={{ uri: report.imageUri }} style={styles.reportImage} />
+                  <Image
+                    source={{ uri: report.imageUri }}
+                    style={styles.reportImage}
+                  />
                 )}
               </View>
               <Text style={styles.reportDescription} numberOfLines={2}>
@@ -121,7 +181,10 @@ export default function MyReportsScreen() {
                 <View style={styles.locationContainer}>
                   <Ionicons name="location" size={16} color="#666" />
                   <Text style={styles.locationText}>
-                    {report.location.address || `${report.location.latitude.toFixed(4)}, ${report.location.longitude.toFixed(4)}`}
+                    {report.location.address ||
+                      `${report.location.latitude.toFixed(
+                        4
+                      )}, ${report.location.longitude.toFixed(4)}`}
                   </Text>
                 </View>
               )}
@@ -129,6 +192,14 @@ export default function MyReportsScreen() {
           ))}
         </>
       )}
+
+      {/* Report Detail Modal */}
+      <ReportDetailModal
+        visible={showReportDetail}
+        report={selectedReport ? convertToCommunityReport(selectedReport) : null}
+        onClose={() => setShowReportDetail(false)}
+        onUpvote={() => {}} // No upvote functionality for own reports
+      />
     </ScrollView>
   );
 }
@@ -282,5 +353,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginLeft: 4,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  anonymousTag: {
+    backgroundColor: "#e9ecef",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginLeft: 8,
+  },
+  anonymousText: {
+    fontSize: 12,
+    color: "#6c757d",
+    fontWeight: "500",
   },
 });

@@ -1,35 +1,132 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Import screen components
 import CreateReportModal from "../components/CreateReportModal";
 import CreateReportScreen from "../screens/CreateReportScreen";
 import HomeScreen from "../screens/HomeScreen";
-import SearchScreen from "../screens/SearchScreen";
-import ProfileScreen from "../screens/ProfileScreen";
 import MyReportsScreen from "../screens/MyReportsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import SearchScreen from "../screens/SearchScreen";
 
 const Tab = createBottomTabNavigator();
-
-// Custom Tab Bar Button for the middle CREATE REPORT button
-const CustomTabBarButton = ({ children, onPress }: any) => (
-  <TouchableOpacity
-    style={{
-      top: -30,
-      justifyContent: "center",
-      alignItems: "center",
-      ...styles.shadow,
-    }}
-    onPress={onPress}
-  >
-    <View style={styles.customButton}>{children}</View>
-  </TouchableOpacity>
-);
+const { width, height } = Dimensions.get("window");
 
 const Tabs = () => {
   const [showCreateReportModal, setShowCreateReportModal] = useState(false);
+  const insets = useSafeAreaInsets();
+
+  // Responsive breakpoints and values calculated at runtime
+  const isTablet = width >= 768;
+  const isSmallPhone = width <= 375;
+
+  // Add extra margin based on safe area and device type
+  const baseMargin = isTablet ? 35 : isSmallPhone ? 25 : 30;
+  const safeMargin = Math.max(baseMargin, insets.left + 15, insets.right + 15);
+
+  // Ensure minimum margin even if safe area is 0
+  const finalMargin = Math.max(safeMargin, baseMargin);
+
+  // Calculate responsive values with proper constraints
+  const getResponsiveValue = () => {
+    if (isTablet) {
+      return {
+        navbarHeight: 80,
+        fontSize: 12,
+        iconSize: 24,
+        buttonSize: 65,
+        margin: finalMargin, // Use safe area aware margin
+      };
+    } else if (isSmallPhone) {
+      return {
+        navbarHeight: 70,
+        fontSize: 9,
+        iconSize: 20,
+        buttonSize: 50,
+        margin: finalMargin, // Use safe area aware margin
+      };
+    } else {
+      return {
+        navbarHeight: 75,
+        fontSize: 10,
+        iconSize: 22,
+        buttonSize: 55,
+        margin: finalMargin, // Use safe area aware margin
+      };
+    }
+  };
+
+  const responsive = getResponsiveValue();
+
+  // Dynamic styles that depend on responsive values
+  const dynamicStyles = StyleSheet.create({
+    tabBarStyle: {
+      position: "absolute",
+      bottom: 15,
+      left: responsive.margin,
+      right: responsive.margin,
+      backgroundColor: "#ffffff",
+      borderRadius: 20,
+      height: responsive.navbarHeight,
+      paddingBottom: isTablet ? 15 : 10,
+      paddingTop: isTablet ? 15 : 10,
+      marginHorizontal: 0, // Ensure no additional margin
+      ...styles.shadow,
+    },
+    customButton: {
+      width: responsive.buttonSize,
+      height: responsive.buttonSize,
+      borderRadius: responsive.buttonSize / 2,
+      backgroundColor: "#e32f45",
+      justifyContent: "center",
+      alignItems: "center",
+      borderWidth: 3,
+      borderColor: "#ffffff",
+    },
+    tabItem: {
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: responsive.navbarHeight - 20,
+      paddingHorizontal: isSmallPhone ? 2 : 4,
+      flex: 1,
+      maxWidth: width / 5, // Ensure equal distribution among 5 tabs
+      paddingVertical: 5, // Add vertical padding for better spacing
+    },
+    tabLabel: {
+      fontSize: responsive.fontSize,
+      marginTop: isSmallPhone ? 1 : 2, // Reduced marginTop for Android phones
+      fontWeight: "600",
+      textAlign: "center",
+      flexShrink: 0, // Prevent text shrinking
+      width: "100%", // Take full available width
+    },
+  });
+
+  // Custom Tab Bar Button for the middle CREATE REPORT button
+  const CustomTabBarButton = ({ children, onPress }: any) => (
+    <TouchableOpacity
+      style={[
+        {
+          top: -25,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        styles.shadow,
+      ]}
+      onPress={onPress}
+    >
+      <View style={dynamicStyles.customButton}>{children}</View>
+    </TouchableOpacity>
+  );
 
   const handleCreateReportPress = () => {
     setShowCreateReportModal(true);
@@ -41,16 +138,7 @@ const Tabs = () => {
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarStyle: {
-            position: "absolute",
-            bottom: 25,
-            left: 20,
-            right: 20,
-            backgroundColor: "#ffffff",
-            borderRadius: 15,
-            height: 90,
-            ...styles.shadow,
-          },
+          tabBarStyle: dynamicStyles.tabBarStyle,
         }}
       >
         <Tab.Screen
@@ -58,19 +146,21 @@ const Tabs = () => {
           component={HomeScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
+              <View style={dynamicStyles.tabItem}>
                 <Ionicons
                   name={focused ? "home" : "home-outline"}
-                  size={25}
+                  size={responsive.iconSize}
                   color={focused ? "#e32f45" : "#748c94"}
                 />
                 <Text
                   style={[
-                    styles.tabLabel,
+                    dynamicStyles.tabLabel,
                     {
                       color: focused ? "#e32f45" : "#748c94",
                     },
                   ]}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.8}
                 >
                   HOME
                 </Text>
@@ -84,19 +174,21 @@ const Tabs = () => {
           component={SearchScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
+              <View style={dynamicStyles.tabItem}>
                 <Ionicons
                   name={focused ? "search" : "search-outline"}
-                  size={25}
+                  size={responsive.iconSize}
                   color={focused ? "#e32f45" : "#748c94"}
                 />
                 <Text
                   style={[
-                    styles.tabLabel,
+                    dynamicStyles.tabLabel,
                     {
                       color: focused ? "#e32f45" : "#748c94",
                     },
                   ]}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.8}
                 >
                   SEARCH
                 </Text>
@@ -126,21 +218,23 @@ const Tabs = () => {
           component={MyReportsScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
+              <View style={dynamicStyles.tabItem}>
                 <Ionicons
                   name={focused ? "document-text" : "document-text-outline"}
-                  size={25}
+                  size={responsive.iconSize}
                   color={focused ? "#e32f45" : "#748c94"}
                 />
                 <Text
                   style={[
-                    styles.tabLabel,
+                    dynamicStyles.tabLabel,
                     {
                       color: focused ? "#e32f45" : "#748c94",
                     },
                   ]}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.8}
                 >
-                  MY REPORTS
+                  REPORTS
                 </Text>
               </View>
             ),
@@ -152,19 +246,21 @@ const Tabs = () => {
           component={ProfileScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
+              <View style={dynamicStyles.tabItem}>
                 <Ionicons
                   name={focused ? "person" : "person-outline"}
-                  size={25}
+                  size={responsive.iconSize}
                   color={focused ? "#e32f45" : "#748c94"}
                 />
                 <Text
                   style={[
-                    styles.tabLabel,
+                    dynamicStyles.tabLabel,
                     {
                       color: focused ? "#e32f45" : "#748c94",
                     },
                   ]}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.8}
                 >
                   PROFILE
                 </Text>
@@ -182,32 +278,17 @@ const Tabs = () => {
   );
 };
 
+// Static styles that don't depend on responsive values
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: "#7F5DF0",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 4,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 5,
-  },
-  customButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#e32f45",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  tabItem: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tabLabel: {
-    fontSize: 12,
-    marginTop: 4,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
   },
 });
 

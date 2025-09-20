@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { useReports } from "../context/ReportsContext";
 
 interface CreateReportModalProps {
@@ -53,11 +54,11 @@ export default function CreateReportModal({
 
   const requestLocationPermissions = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
+    if (status !== "granted") {
       Alert.alert(
-        'Permission Required',
-        'Location access is required to automatically capture the location of incidents.',
-        [{ text: 'OK' }]
+        "Permission Required",
+        "Location access is required to automatically capture the location of incidents.",
+        [{ text: "OK" }]
       );
       return false;
     }
@@ -73,25 +74,50 @@ export default function CreateReportModal({
       const location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
-      
+
       // Get address from coordinates
-      const address = await Location.reverseGeocodeAsync({
+      const addresses = await Location.reverseGeocodeAsync({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       });
 
+      let addressText = "Unknown location";
+      if (addresses && addresses.length > 0) {
+        const addr = addresses[0];
+        const parts = [];
+
+        // Build address from available parts
+        if (addr.name) parts.push(addr.name);
+        if (addr.street) parts.push(addr.street);
+        if (addr.district) parts.push(addr.district);
+        if (addr.city) parts.push(addr.city);
+        if (addr.region) parts.push(addr.region);
+        if (addr.country) parts.push(addr.country);
+
+        if (parts.length > 0) {
+          addressText = parts.slice(0, 3).join(", "); // Take first 3 parts
+        } else {
+          // Fallback to coordinates if no address parts available
+          addressText = `${location.coords.latitude.toFixed(
+            6
+          )}, ${location.coords.longitude.toFixed(6)}`;
+        }
+      }
+
       const locationData = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        address: address[0] ? `${address[0].street}, ${address[0].city}` : 'Unknown location',
+        address: addressText,
+        fullAddress: addresses[0] || null,
       };
-      
+
       setCurrentLocation(locationData);
       setIsGettingLocation(false);
       return locationData;
     } catch (error) {
       setIsGettingLocation(false);
-      Alert.alert('Error', 'Could not get location. Please try again.');
+      console.error("Location error:", error);
+      Alert.alert("Error", "Could not get location. Please try again.");
       return null;
     }
   };
@@ -188,7 +214,7 @@ export default function CreateReportModal({
       Alert.alert("Error", "Please add a description for your report.");
       return;
     }
-    
+
     if (!selectedIssueType) {
       Alert.alert("Error", "Please select an issue type.");
       return;
@@ -197,9 +223,11 @@ export default function CreateReportModal({
     setIsSubmitting(true);
 
     // Add report to context
-    const selectedType = issueTypes.find(type => type.value === selectedIssueType);
+    const selectedType = issueTypes.find(
+      (type) => type.value === selectedIssueType
+    );
     addReport({
-      title: selectedType?.label || 'Unknown Issue',
+      title: selectedType?.label || "Unknown Issue",
       description: description.trim(),
       type: selectedIssueType as any,
       imageUri: selectedImage || undefined,
@@ -264,27 +292,35 @@ export default function CreateReportModal({
           {/* Issue Type Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Issue Type</Text>
-            <Text style={styles.sectionSubtitle}>Select the type of issue you're reporting</Text>
-            
+            <Text style={styles.sectionSubtitle}>
+              Select the type of issue you're reporting
+            </Text>
+
             <View style={styles.issueTypeGrid}>
               {issueTypes.map((issue) => (
                 <TouchableOpacity
                   key={issue.value}
                   style={[
                     styles.issueTypeButton,
-                    selectedIssueType === issue.value && styles.issueTypeButtonSelected
+                    selectedIssueType === issue.value &&
+                      styles.issueTypeButtonSelected,
                   ]}
                   onPress={() => setSelectedIssueType(issue.value)}
                 >
-                  <Ionicons 
-                    name={issue.icon as any} 
-                    size={24} 
-                    color={selectedIssueType === issue.value ? '#fff' : '#e32f45'} 
+                  <Ionicons
+                    name={issue.icon as any}
+                    size={24}
+                    color={
+                      selectedIssueType === issue.value ? "#fff" : "#e32f45"
+                    }
                   />
-                  <Text style={[
-                    styles.issueTypeText,
-                    selectedIssueType === issue.value && styles.issueTypeTextSelected
-                  ]}>
+                  <Text
+                    style={[
+                      styles.issueTypeText,
+                      selectedIssueType === issue.value &&
+                        styles.issueTypeTextSelected,
+                    ]}
+                  >
                     {issue.label}
                   </Text>
                 </TouchableOpacity>
@@ -296,7 +332,8 @@ export default function CreateReportModal({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Photo Evidence</Text>
             <Text style={styles.sectionSubtitle}>
-              Add a photo to support your report {isGettingLocation && '(Getting location...)'}
+              Add a photo to support your report{" "}
+              {isGettingLocation && "(Getting location...)"}
             </Text>
 
             {selectedImage ? (
@@ -315,7 +352,7 @@ export default function CreateReportModal({
                   <View style={styles.locationOverlay}>
                     <Ionicons name="location" size={16} color="#fff" />
                     <Text style={styles.locationText}>
-                      {currentLocation.address || 'Location captured'}
+                      {currentLocation.address || "Location captured"}
                     </Text>
                   </View>
                 )}
@@ -327,7 +364,9 @@ export default function CreateReportModal({
               >
                 <Ionicons name="camera" size={32} color="#e32f45" />
                 <Text style={styles.photoButtonText}>Tap to add photo</Text>
-                <Text style={styles.photoButtonSubtext}>Camera or Gallery • Location auto-captured</Text>
+                <Text style={styles.photoButtonSubtext}>
+                  Camera or Gallery • Location auto-captured
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -351,15 +390,123 @@ export default function CreateReportModal({
             />
           </View>
 
+          {/* Manual Location Button (if no location captured) */}
+          {!currentLocation && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Location</Text>
+              <Text style={styles.sectionSubtitle}>
+                Add location information to help authorities locate the issue
+              </Text>
+
+              <TouchableOpacity
+                style={styles.getLocationButton}
+                onPress={getCurrentLocation}
+                disabled={isGettingLocation}
+              >
+                <Ionicons
+                  name={isGettingLocation ? "hourglass" : "location"}
+                  size={24}
+                  color={isGettingLocation ? "#999" : "#e32f45"}
+                />
+                <Text
+                  style={[
+                    styles.getLocationButtonText,
+                    isGettingLocation && styles.getLocationButtonTextDisabled,
+                  ]}
+                >
+                  {isGettingLocation
+                    ? "Getting location..."
+                    : "Get Current Location"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* Location Info */}
           {currentLocation && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Location</Text>
-              <View style={styles.locationInfoContainer}>
-                <Ionicons name="location" size={20} color="#e32f45" />
-                <Text style={styles.locationInfoText}>
-                  {currentLocation.address || `${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}`}
-                </Text>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Location</Text>
+                <TouchableOpacity
+                  style={styles.refreshLocationButton}
+                  onPress={getCurrentLocation}
+                  disabled={isGettingLocation}
+                >
+                  <Ionicons
+                    name="refresh"
+                    size={16}
+                    color={isGettingLocation ? "#999" : "#e32f45"}
+                  />
+                  <Text
+                    style={[
+                      styles.refreshLocationText,
+                      isGettingLocation && styles.refreshLocationTextDisabled,
+                    ]}
+                  >
+                    {isGettingLocation ? "Updating..." : "Refresh"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.locationSection}>
+                <View style={styles.locationInfoContainer}>
+                  <Ionicons name="location" size={20} color="#e32f45" />
+                  <View style={styles.locationDetails}>
+                    <Text style={styles.locationInfoText}>
+                      {currentLocation.address}
+                    </Text>
+                    <Text style={styles.coordinatesText}>
+                      {currentLocation.latitude.toFixed(6)},{" "}
+                      {currentLocation.longitude.toFixed(6)}
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Map View */}
+                <View style={styles.mapContainer}>
+                  <MapView
+                    style={styles.map}
+                    initialRegion={{
+                      latitude: currentLocation.latitude,
+                      longitude: currentLocation.longitude,
+                      latitudeDelta: 0.005,
+                      longitudeDelta: 0.005,
+                    }}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
+                    pitchEnabled={false}
+                    rotateEnabled={false}
+                  >
+                    <Marker
+                      coordinate={{
+                        latitude: currentLocation.latitude,
+                        longitude: currentLocation.longitude,
+                      }}
+                      title="Report Location"
+                      description={currentLocation.address}
+                    >
+                      <View style={styles.markerContainer}>
+                        <Ionicons name="location" size={30} color="#e32f45" />
+                      </View>
+                    </Marker>
+                  </MapView>
+                  <TouchableOpacity
+                    style={styles.mapOverlay}
+                    onPress={() => {
+                      // Optional: Open in a larger map modal or external maps app
+                      Alert.alert(
+                        "Location",
+                        `Lat: ${currentLocation.latitude.toFixed(
+                          6
+                        )}\nLng: ${currentLocation.longitude.toFixed(6)}\n\n${
+                          currentLocation.address
+                        }`,
+                        [{ text: "OK" }]
+                      );
+                    }}
+                  >
+                    <Text style={styles.mapOverlayText}>Tap for details</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           )}
@@ -370,7 +517,9 @@ export default function CreateReportModal({
               style={styles.anonymousContainer}
               onPress={() => setIsAnonymous(!isAnonymous)}
             >
-              <View style={[styles.checkbox, isAnonymous && styles.checkboxChecked]}>
+              <View
+                style={[styles.checkbox, isAnonymous && styles.checkboxChecked]}
+              >
                 {isAnonymous && (
                   <Ionicons name="checkmark" size={16} color="#fff" />
                 )}
@@ -593,5 +742,92 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#666",
     lineHeight: 18,
+  },
+  locationSection: {
+    gap: 12,
+  },
+  locationDetails: {
+    flex: 1,
+    marginLeft: 8,
+  },
+  coordinatesText: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 2,
+    fontFamily: "monospace",
+  },
+  mapContainer: {
+    height: 150,
+    borderRadius: 12,
+    overflow: "hidden",
+    position: "relative",
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+  map: {
+    flex: 1,
+  },
+  markerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mapOverlay: {
+    position: "absolute",
+    bottom: 8,
+    right: 8,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  mapOverlayText: {
+    color: "#fff",
+    fontSize: 11,
+    fontWeight: "500",
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  refreshLocationButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+  refreshLocationText: {
+    fontSize: 12,
+    color: "#e32f45",
+    fontWeight: "500",
+    marginLeft: 4,
+  },
+  refreshLocationTextDisabled: {
+    color: "#999",
+  },
+  getLocationButton: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#e32f45",
+    borderStyle: "dashed",
+  },
+  getLocationButtonText: {
+    fontSize: 16,
+    color: "#e32f45",
+    fontWeight: "600",
+    marginLeft: 8,
+  },
+  getLocationButtonTextDisabled: {
+    color: "#999",
   },
 });

@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
-import { ReportsProvider } from "../context/ReportsContext";
 import { CommunityReportsProvider } from "../context/CommunityReportsContext";
+import { ReportsProvider } from "../context/ReportsContext";
 
 export default function RootLayout() {
   return (

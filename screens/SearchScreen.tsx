@@ -1,23 +1,27 @@
-import React, { useState } from "react";
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  TextInput, 
-  TouchableOpacity, 
-  Alert,
-  ScrollView,
-  FlatList
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useCommunityReports, CommunityReport } from "../context/CommunityReportsContext";
+import React, { useState } from "react";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ReportDetailModal from "../components/ReportDetailModal";
+import {
+  CommunityReport,
+  useCommunityReports,
+} from "../context/CommunityReportsContext";
 
 export default function SearchScreen() {
   const { searchReports, toggleUpvote } = useCommunityReports();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null);
+  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(
+    null
+  );
   const [showReportDetail, setShowReportDetail] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -33,7 +37,7 @@ export default function SearchScreen() {
 
     if (results.length === 0) {
       Alert.alert(
-        "No Results", 
+        "No Results",
         `No reports found matching "${searchQuery}". Try searching by report ID (e.g., CR001) or keywords.`
       );
     }
@@ -76,8 +80,10 @@ export default function SearchScreen() {
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 48) return "1d ago";
@@ -95,72 +101,102 @@ export default function SearchScreen() {
     if (selectedReport && selectedReport.id === reportId) {
       const updatedReport = {
         ...selectedReport,
-        upvotes: selectedReport.hasUserUpvoted ? selectedReport.upvotes - 1 : selectedReport.upvotes + 1,
-        hasUserUpvoted: !selectedReport.hasUserUpvoted
+        upvotes: selectedReport.hasUserUpvoted
+          ? selectedReport.upvotes - 1
+          : selectedReport.upvotes + 1,
+        hasUserUpvoted: !selectedReport.hasUserUpvoted,
       };
       setSelectedReport(updatedReport);
     }
     // Update search results if they contain this report
-    setSearchResults(prev => prev.map(report => {
-      if (report.id === reportId) {
-        return {
-          ...report,
-          upvotes: report.hasUserUpvoted ? report.upvotes - 1 : report.upvotes + 1,
-          hasUserUpvoted: !report.hasUserUpvoted
-        };
-      }
-      return report;
-    }));
+    setSearchResults((prev) =>
+      prev.map((report) => {
+        if (report.id === reportId) {
+          return {
+            ...report,
+            upvotes: report.hasUserUpvoted
+              ? report.upvotes - 1
+              : report.upvotes + 1,
+            hasUserUpvoted: !report.hasUserUpvoted,
+          };
+        }
+        return report;
+      })
+    );
   };
 
   const renderSearchResult = ({ item: report }: { item: any }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.reportCard}
       onPress={() => handleReportPress(report)}
     >
       <View style={styles.reportHeader}>
-        <View style={[styles.iconContainer, { backgroundColor: getStatusColor(report.status) + '20' }]}>
-          <Ionicons 
-            name={getIssueTypeIcon(report.type) as any} 
-            size={24} 
-            color={getStatusColor(report.status)} 
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: getStatusColor(report.status) + "20" },
+          ]}
+        >
+          <Ionicons
+            name={getIssueTypeIcon(report.type) as any}
+            size={24}
+            color={getStatusColor(report.status)}
           />
         </View>
         <View style={styles.reportContent}>
           <Text style={styles.reportId}>ID: {report.id}</Text>
-          <Text style={styles.reportTitle} numberOfLines={2}>{report.title}</Text>
+          <Text style={styles.reportTitle} numberOfLines={2}>
+            {report.title}
+          </Text>
           <Text style={styles.reportLocation}>{report.location.address}</Text>
           <View style={styles.reportMeta}>
-            <Text style={styles.reportTime}>{formatDate(report.timestamp)}</Text>
+            <Text style={styles.reportTime}>
+              {formatDate(report.timestamp)}
+            </Text>
             <Text style={styles.reportAuthor}>by {report.reporter.name}</Text>
           </View>
         </View>
-        <View style={[styles.statusIndicator, { backgroundColor: getStatusColor(report.status) }]}>
+        <View
+          style={[
+            styles.statusIndicator,
+            { backgroundColor: getStatusColor(report.status) },
+          ]}
+        >
           <Text style={styles.statusText}>
-            {report.status === 'in-progress' ? 'IN PROGRESS' : report.status.toUpperCase()}
+            {report.status === "in-progress"
+              ? "IN PROGRESS"
+              : report.status.toUpperCase()}
           </Text>
         </View>
       </View>
-      
+
       <Text style={styles.reportDescription} numberOfLines={2}>
         {report.description}
       </Text>
-      
+
       <View style={styles.reportFooter}>
-        <TouchableOpacity 
-          style={[styles.upvoteButton, report.hasUserUpvoted && styles.upvoteButtonActive]}
+        <TouchableOpacity
+          style={[
+            styles.upvoteButton,
+            report.hasUserUpvoted && styles.upvoteButtonActive,
+          ]}
           onPress={() => handleUpvote(report.id)}
         >
-          <Ionicons 
-            name={report.hasUserUpvoted ? "heart" : "heart-outline"} 
-            size={18} 
-            color={report.hasUserUpvoted ? "#fff" : "#e32f45"} 
+          <Ionicons
+            name={report.hasUserUpvoted ? "heart" : "heart-outline"}
+            size={18}
+            color={report.hasUserUpvoted ? "#fff" : "#e32f45"}
           />
-          <Text style={[styles.upvoteCount, report.hasUserUpvoted && styles.upvoteCountActive]}>
+          <Text
+            style={[
+              styles.upvoteCount,
+              report.hasUserUpvoted && styles.upvoteCountActive,
+            ]}
+          >
             {report.upvotes}
           </Text>
         </TouchableOpacity>
-        
+
         <View style={styles.viewDetailsContainer}>
           <Text style={styles.viewDetailsText}>Tap to view details</Text>
           <Ionicons name="chevron-forward" size={16} color="#999" />
@@ -182,7 +218,12 @@ export default function SearchScreen() {
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
-          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+          <Ionicons
+            name="search"
+            size={20}
+            color="#666"
+            style={styles.searchIcon}
+          />
           <TextInput
             style={styles.searchInput}
             placeholder="Enter report ID (e.g., CR001) or keywords..."
@@ -197,13 +238,21 @@ export default function SearchScreen() {
             </TouchableOpacity>
           )}
         </View>
-        
-        <TouchableOpacity 
-          style={[styles.searchButton, !searchQuery.trim() && styles.searchButtonDisabled]}
+
+        <TouchableOpacity
+          style={[
+            styles.searchButton,
+            !searchQuery.trim() && styles.searchButtonDisabled,
+          ]}
           onPress={handleSearch}
           disabled={!searchQuery.trim()}
         >
-          <Text style={[styles.searchButtonText, !searchQuery.trim() && styles.searchButtonTextDisabled]}>
+          <Text
+            style={[
+              styles.searchButtonText,
+              !searchQuery.trim() && styles.searchButtonTextDisabled,
+            ]}
+          >
             Search
           </Text>
         </TouchableOpacity>
@@ -216,11 +265,14 @@ export default function SearchScreen() {
             <Ionicons name="search-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>Search for Reports</Text>
             <Text style={styles.emptySubtitle}>
-              Enter a report ID like "CR001" or use keywords to find specific reports
+              Enter a report ID like "CR001" or use keywords to find specific
+              reports
             </Text>
             <View style={styles.exampleContainer}>
               <Text style={styles.exampleTitle}>Example searches:</Text>
-              <Text style={styles.exampleText}>• CR001 (specific report ID)</Text>
+              <Text style={styles.exampleText}>
+                • CR001 (specific report ID)
+              </Text>
               <Text style={styles.exampleText}>• pothole (issue type)</Text>
               <Text style={styles.exampleText}>• Arjun (reporter name)</Text>
               <Text style={styles.exampleText}>• Delhi (location)</Text>
@@ -231,20 +283,25 @@ export default function SearchScreen() {
             <Ionicons name="document-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>No Reports Found</Text>
             <Text style={styles.emptySubtitle}>
-              No reports match your search "{searchQuery}". Try different keywords or report IDs.
+              No reports match your search "{searchQuery}". Try different
+              keywords or report IDs.
             </Text>
           </View>
         ) : (
           <>
             <View style={styles.resultsHeader}>
               <Text style={styles.resultsCount}>
-                {searchResults.length} {searchResults.length === 1 ? 'result' : 'results'} found
+                {searchResults.length}{" "}
+                {searchResults.length === 1 ? "result" : "results"} found
               </Text>
-              <TouchableOpacity onPress={clearSearch} style={styles.clearResultsButton}>
+              <TouchableOpacity
+                onPress={clearSearch}
+                style={styles.clearResultsButton}
+              >
                 <Text style={styles.clearResultsText}>Clear</Text>
               </TouchableOpacity>
             </View>
-            
+
             <FlatList
               data={searchResults}
               renderItem={renderSearchResult}
