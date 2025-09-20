@@ -15,7 +15,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { WebView } from "react-native-webview";
+import { useCommunityReports } from "../context/CommunityReportsContext";
 import { useReports } from "../context/ReportsContext";
 
 interface CreateReportModalProps {
@@ -36,6 +37,33 @@ const issueTypes = [
   { value: "overgrown-weed", label: "Overgrown Weed", icon: "leaf-outline" },
 ];
 
+const wardOptions = [
+  "Bokaro",
+  "Chatra",
+  "Deoghar",
+  "Dhanbad",
+  "Dumka",
+  "East Singhbhum",
+  "Garhwa",
+  "Giridih",
+  "Godda",
+  "Gumla",
+  "Hazaribag",
+  "Jamtara",
+  "Khunti",
+  "Koderma",
+  "Latehar",
+  "Lohardaga",
+  "Palamu",
+  "Pakur",
+  "Ramgarh",
+  "Ranchi",
+  "Sahebganj",
+  "Seraikela Kharsawan",
+  "Simdega",
+  "West Singhbhum",
+];
+
 export default function CreateReportModal({
   visible,
   onClose,
@@ -49,8 +77,11 @@ export default function CreateReportModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [selectedWard, setSelectedWard] = useState<string | null>(null);
+  const [showWardSelector, setShowWardSelector] = useState(false);
 
   const { addReport } = useReports();
+  const { addCommunityReport, selectedArea } = useCommunityReports();
 
   const requestLocationPermissions = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -222,7 +253,7 @@ export default function CreateReportModal({
 
     setIsSubmitting(true);
 
-    // Add report to context
+    // Add report to personal reports context
     const selectedType = issueTypes.find(
       (type) => type.value === selectedIssueType
     );
@@ -233,6 +264,21 @@ export default function CreateReportModal({
       imageUri: selectedImage || undefined,
       location: currentLocation,
       isAnonymous: isAnonymous,
+    });
+
+    // Also add to community reports so it appears in HomeScreen
+    const reportArea = selectedWard || selectedArea; // Use selected ward or current selected area
+    addCommunityReport({
+      title: selectedType?.label || "Unknown Issue",
+      description: description.trim(),
+      type: selectedIssueType as any,
+      imageUri: selectedImage || undefined,
+      location: {
+        latitude: currentLocation?.latitude || 0,
+        longitude: currentLocation?.longitude || 0,
+        address: currentLocation?.address || `${reportArea}, Jharkhand`,
+        area: reportArea,
+      },
     });
 
     setIsSubmitting(false);
@@ -326,6 +372,70 @@ export default function CreateReportModal({
                 </TouchableOpacity>
               ))}
             </View>
+          </View>
+
+          {/* District Selection Section (Optional) */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              District Selection (Optional)
+            </Text>
+            <Text style={styles.sectionSubtitle}>
+              Select your district in Jharkhand if you know it, otherwise we'll
+              detect it automatically
+            </Text>
+
+            <TouchableOpacity
+              style={styles.wardSelector}
+              onPress={() => setShowWardSelector(!showWardSelector)}
+            >
+              <Text
+                style={[
+                  styles.wardSelectorText,
+                  selectedWard && styles.wardSelectorTextSelected,
+                ]}
+              >
+                {selectedWard || "Select District (Optional)"}
+              </Text>
+              <Ionicons
+                name={showWardSelector ? "chevron-up" : "chevron-down"}
+                size={20}
+                color="#666"
+              />
+            </TouchableOpacity>
+
+            {showWardSelector && (
+              <View style={styles.wardOptionsContainer}>
+                <ScrollView
+                  style={styles.wardScrollView}
+                  showsVerticalScrollIndicator={true}
+                  nestedScrollEnabled={true}
+                >
+                  <TouchableOpacity
+                    style={styles.wardOption}
+                    onPress={() => {
+                      setSelectedWard(null);
+                      setShowWardSelector(false);
+                    }}
+                  >
+                    <Text style={styles.wardOptionText}>
+                      Auto-detect district
+                    </Text>
+                  </TouchableOpacity>
+                  {wardOptions.map((ward) => (
+                    <TouchableOpacity
+                      key={ward}
+                      style={styles.wardOption}
+                      onPress={() => {
+                        setSelectedWard(ward);
+                        setShowWardSelector(false);
+                      }}
+                    >
+                      <Text style={styles.wardOptionText}>{ward}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
           </View>
 
           {/* Photo Section */}
@@ -463,32 +573,51 @@ export default function CreateReportModal({
 
                 {/* Map View */}
                 <View style={styles.mapContainer}>
-                  <MapView
-                    style={styles.map}
-                    initialRegion={{
-                      latitude: currentLocation.latitude,
-                      longitude: currentLocation.longitude,
-                      latitudeDelta: 0.005,
-                      longitudeDelta: 0.005,
+                  <WebView
+                    source={{
+                      html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8" />
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                            <style>
+                                body { margin: 0; padding: 0; }
+                                #map { height: 100vh; width: 100%; }
+                            </style>
+                        </head>
+                        <body>
+                            <div id="map"></div>
+                            <script>
+                                var map = L.map('map').setView([${currentLocation.latitude}, ${currentLocation.longitude}], 16);
+                                
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '© OpenStreetMap contributors'
+                                }).addTo(map);
+                                
+                                var marker = L.marker([${currentLocation.latitude}, ${currentLocation.longitude}]).addTo(map);
+                                marker.bindPopup('Report Location');
+                                
+                                // Disable interactions for create report view
+                                map.dragging.disable();
+                                map.touchZoom.disable();
+                                map.doubleClickZoom.disable();
+                                map.scrollWheelZoom.disable();
+                                map.boxZoom.disable();
+                                map.keyboard.disable();
+                            </script>
+                        </body>
+                        </html>
+                      `,
                     }}
+                    style={styles.map}
                     scrollEnabled={false}
-                    zoomEnabled={false}
-                    pitchEnabled={false}
-                    rotateEnabled={false}
-                  >
-                    <Marker
-                      coordinate={{
-                        latitude: currentLocation.latitude,
-                        longitude: currentLocation.longitude,
-                      }}
-                      title="Report Location"
-                      description={currentLocation.address}
-                    >
-                      <View style={styles.markerContainer}>
-                        <Ionicons name="location" size={30} color="#2E6A56" />
-                      </View>
-                    </Marker>
-                  </MapView>
+                    scalesPageToFit={false}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                  />
                   <TouchableOpacity
                     style={styles.mapOverlay}
                     onPress={() => {
@@ -830,9 +959,48 @@ const styles = StyleSheet.create({
   getLocationButtonTextDisabled: {
     color: "#999",
   },
+  wardSelector: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+  },
+  wardSelectorText: {
+    fontSize: 16,
+    color: "#999",
+  },
+  wardSelectorTextSelected: {
+    color: "#4A4A4A",
+    fontWeight: "500",
+  },
+  wardOptionsContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+    marginTop: 8,
+    maxHeight: 240,
+    overflow: "hidden",
+  },
+  wardScrollView: {
+    backgroundColor: "#FFFFFF",
+    maxHeight: 240,
+  },
+  wardOption: {
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f1f3f4",
+    backgroundColor: "#FFFFFF",
+  },
+  wardOptionText: {
+    fontSize: 16,
+    color: "#4A4A4A",
+  },
 });
-
-
-
-
-

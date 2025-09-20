@@ -5,7 +5,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -33,7 +32,6 @@ export default function HomeScreen() {
     null
   );
   const [showReportDetail, setShowReportDetail] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showStatusFilter, setShowStatusFilter] = useState(false);
 
@@ -41,26 +39,11 @@ export default function HomeScreen() {
     (report) => report.status !== "resolved"
   );
 
-  // Filter reports based on search query and status
-  const filteredReports = searchQuery.trim()
-    ? allReports.filter(
-        (report) =>
-          report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          report.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          report.location.address
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          report.location.area.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : allReports;
-
   // Apply status filter
   const reportsInArea =
     statusFilter === "all"
-      ? filteredReports
-      : filteredReports.filter((report) => report.status === statusFilter);
+      ? allReports
+      : allReports.filter((report) => report.status === statusFilter);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -204,7 +187,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Area Selector */}
+      {/* District Selector */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <Text style={styles.welcomeText}>{t("welcome")}</Text>
@@ -212,7 +195,7 @@ export default function HomeScreen() {
             style={styles.languageButton}
             onPress={() => setShowLanguageSelector(!showLanguageSelector)}
           >
-            <Text style={styles.languageFlag}>{currentLanguage.flag}</Text>
+            <Text style={styles.languageName}>{currentLanguage.name}</Text>
             <Ionicons name="chevron-down" size={16} color="#4A4A4A" />
           </TouchableOpacity>
         </View>
@@ -232,16 +215,18 @@ export default function HomeScreen() {
           />
         </TouchableOpacity>
 
-        {/* Area Dropdown */}
+        {/* District Dropdown */}
         {showAreaSelector && (
           <View style={styles.areaDropdown}>
-            <ScrollView
+            <FlatList
+              data={areas}
+              keyExtractor={(item) => item}
               style={styles.areaScrollView}
               showsVerticalScrollIndicator={true}
-              nestedScrollEnabled={true}
               keyboardShouldPersistTaps="handled"
-            >
-              {areas.map((area) => (
+              bounces={true}
+              contentContainerStyle={{ paddingBottom: 10 }}
+              renderItem={({ item: area }) => (
                 <TouchableOpacity
                   key={area}
                   style={[
@@ -265,8 +250,8 @@ export default function HomeScreen() {
                     <Ionicons name="checkmark" size={20} color="#2E6A56" />
                   )}
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
+              )}
+            />
           </View>
         )}
 
@@ -290,7 +275,6 @@ export default function HomeScreen() {
                     setShowLanguageSelector(false);
                   }}
                 >
-                  <Text style={styles.languageFlag}>{language.flag}</Text>
                   <Text
                     style={[
                       styles.languageItemText,
@@ -307,31 +291,6 @@ export default function HomeScreen() {
               ))}
             </ScrollView>
           </View>
-        )}
-      </View>
-
-      {/* Search Input */}
-      <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={20}
-          color="#666"
-          style={styles.searchIcon}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder={t("search") || "Search reports..."}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholderTextColor="#999"
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity
-            onPress={() => setSearchQuery("")}
-            style={styles.clearButton}
-          >
-            <Ionicons name="close-circle" size={20} color="#999" />
-          </TouchableOpacity>
         )}
       </View>
 
@@ -442,6 +401,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
     zIndex: 1000,
+    overflow: "visible",
   },
   headerTop: {
     flexDirection: "row",
@@ -463,8 +423,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e0e0e0",
   },
-  languageFlag: {
-    fontSize: 18,
+  languageName: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#4A4A4A",
     marginRight: 6,
   },
   areaSelector: {
@@ -496,16 +458,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    maxHeight: 320,
-    zIndex: 1001,
+    maxHeight: 400,
+    zIndex: 2000,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 10,
+    overflow: "hidden",
   },
   areaScrollView: {
-    maxHeight: 300,
+    maxHeight: 380,
+    backgroundColor: "#FFFFFF",
   },
   areaItem: {
     flexDirection: "row",
@@ -729,39 +693,6 @@ const styles = StyleSheet.create({
     color: "#666",
     textAlign: "center",
     lineHeight: 20,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    marginHorizontal: 20,
-    marginVertical: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#e9ecef",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  searchIcon: {
-    marginRight: 12,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#4A4A4A",
-    paddingVertical: 0,
-  },
-  clearButton: {
-    marginLeft: 8,
-    padding: 4,
   },
   filterOptionsContainer: {
     backgroundColor: "#FFFFFF",

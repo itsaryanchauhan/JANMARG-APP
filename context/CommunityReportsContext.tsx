@@ -42,22 +42,35 @@ export interface CommunityReport {
     timestamp: string;
     description: string;
     assignedTo?: string;
+    department?: string;
   }[];
 }
 
 const areas = [
-  "Central Delhi",
-  "Bandra",
-  "Koramangala",
-  "Salt Lake",
-  "Malviya Nagar",
-  "Navrangpura",
-  "Gachibowli",
-  "Rajpur Road",
-  "Civil Lines",
-  "Sigra",
-  "Panaji",
-  "RS Puram",
+  "Bokaro",
+  "Chatra",
+  "Deoghar",
+  "Dhanbad",
+  "Dumka",
+  "East Singhbhum",
+  "Garhwa",
+  "Giridih",
+  "Godda",
+  "Gumla",
+  "Hazaribag",
+  "Jamtara",
+  "Khunti",
+  "Koderma",
+  "Latehar",
+  "Lohardaga",
+  "Palamu",
+  "Pakur",
+  "Ramgarh",
+  "Ranchi",
+  "Sahebganj",
+  "Seraikela Kharsawan",
+  "Simdega",
+  "West Singhbhum",
 ];
 
 // Helper function to generate realistic timelines based on status
@@ -96,20 +109,24 @@ const generateTimeline = (
   const assignTime = new Date(
     ackTime.getTime() + (4 + Math.random() * 4) * 60 * 60 * 1000
   );
-  const assignees = [
-    "Public Works Dept.",
-    "Road Maintenance Team",
-    "Sanitation Dept.",
-    "Electrical Team",
+  const assignmentData = [
+    { dept: "Public Works Dept.", personnel: "Rajesh Kumar" },
+    { dept: "Road Maintenance Team", personnel: "Priya Sharma" },
+    { dept: "Sanitation Dept.", personnel: "Amit Singh" },
+    { dept: "Electrical Team", personnel: "Meera Patel" },
+    { dept: "Water Works Dept.", personnel: "Suresh Verma" },
+    { dept: "Traffic Management", personnel: "Neha Gupta" },
   ];
-  const assignedTo = assignees[Math.floor(Math.random() * assignees.length)];
+  const assignment =
+    assignmentData[Math.floor(Math.random() * assignmentData.length)];
 
   timeline.push({
     id: `${reportId}-3`,
     status: "assigned" as const,
     timestamp: assignTime.toISOString(),
-    description: `Assigned to ${assignedTo}`,
-    assignedTo,
+    description: `Assigned to ${assignment.dept}`,
+    assignedTo: assignment.personnel,
+    department: assignment.dept,
   });
 
   if (status === "in-progress" || status === "resolved") {
@@ -122,6 +139,8 @@ const generateTimeline = (
       status: "in-progress" as const,
       timestamp: workStartTime.toISOString(),
       description: "Work started on the reported issue",
+      assignedTo: assignment.personnel,
+      department: assignment.dept,
     });
 
     if (status === "resolved") {
@@ -149,6 +168,18 @@ interface CommunityReportsContextType {
   toggleUpvote: (reportId: string) => void;
   getReportsForArea: (area: string) => CommunityReport[];
   searchReports: (query: string) => CommunityReport[];
+  addCommunityReport: (
+    report: Omit<
+      CommunityReport,
+      | "id"
+      | "timestamp"
+      | "status"
+      | "timeline"
+      | "upvotes"
+      | "hasUserUpvoted"
+      | "reporter"
+    >
+  ) => void;
 }
 
 const CommunityReportsContext = createContext<
@@ -201,6 +232,38 @@ export function CommunityReportsProvider({
     );
   };
 
+  const addCommunityReport = (
+    reportData: Omit<
+      CommunityReport,
+      | "id"
+      | "timestamp"
+      | "status"
+      | "timeline"
+      | "upvotes"
+      | "hasUserUpvoted"
+      | "reporter"
+    >
+  ) => {
+    const reportId = `user_${Date.now()}`;
+    const timestamp = new Date().toISOString();
+
+    const newReport: CommunityReport = {
+      ...reportData,
+      id: reportId,
+      timestamp,
+      status: "submitted",
+      reporter: {
+        name: "You",
+        avatar: undefined,
+      },
+      upvotes: 0,
+      hasUserUpvoted: false,
+      timeline: generateTimeline(reportId, "submitted", timestamp),
+    };
+
+    setReports((prev) => [newReport, ...prev]);
+  };
+
   return (
     <CommunityReportsContext.Provider
       value={{
@@ -211,6 +274,7 @@ export function CommunityReportsProvider({
         toggleUpvote,
         getReportsForArea,
         searchReports,
+        addCommunityReport,
       }}
     >
       {children}

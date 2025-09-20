@@ -150,6 +150,7 @@ export default function ReportDetailModal({
             </View>
             <View style={styles.headerContent}>
               <Text style={styles.reportTitle}>{report.title}</Text>
+              <Text style={styles.reportIdText}>ID: {report.id}</Text>
               <View
                 style={[
                   styles.statusBadge,
@@ -260,6 +261,25 @@ export default function ReportDetailModal({
                       >
                         {getTimelineLabel(entry.status)}
                       </Text>
+                      {entry.assignedTo && (
+                        <View style={styles.assigneeContainer}>
+                          <Ionicons
+                            name="person-circle"
+                            size={16}
+                            color="#5C9479"
+                          />
+                          <Text style={styles.assigneeText}>
+                            {entry.status === "assigned"
+                              ? `Assigned to: ${entry.assignedTo}`
+                              : `Handled by: ${entry.assignedTo}`}
+                          </Text>
+                        </View>
+                      )}
+                      {entry.department && (
+                        <Text style={styles.departmentText}>
+                          {entry.department}
+                        </Text>
+                      )}
                       {entry.timestamp ? (
                         <Text style={styles.timelineTimestamp}>
                           {formatTimelineDate(entry.timestamp)}
@@ -383,6 +403,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#4A4A4A",
+    marginBottom: 4,
+  },
+  reportIdText: {
+    fontSize: 12,
+    color: "#666",
+    fontFamily: "monospace",
     marginBottom: 8,
   },
   statusBadge: {
@@ -595,6 +621,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#999",
     fontStyle: "italic",
+  },
+  assigneeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 4,
+    backgroundColor: "#f8f9fa",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  assigneeText: {
+    fontSize: 13,
+    color: "#2E6A56",
+    fontWeight: "500",
+    marginLeft: 4,
+  },
+  departmentText: {
+    fontSize: 12,
+    color: "#666",
+    fontStyle: "italic",
+    marginBottom: 2,
   },
   coordinates: {
     fontSize: 12,

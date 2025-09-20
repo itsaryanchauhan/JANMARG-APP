@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { WebView } from "react-native-webview";
 
 interface Location {
   latitude: number;
@@ -20,38 +20,59 @@ const ReportMapView: React.FC<ReportMapViewProps> = ({
   title,
   style,
 }) => {
-  const region = {
-    latitude: location.latitude,
-    longitude: location.longitude,
-    latitudeDelta: 0.005, // Small delta for precise view
-    longitudeDelta: 0.005,
+  const generateMapHTML = () => {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <style>
+            body { margin: 0; padding: 0; }
+            #map { height: 100vh; width: 100%; }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            var map = L.map('map').setView([${location.latitude}, ${
+      location.longitude
+    }], 16);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            var marker = L.marker([${location.latitude}, ${
+      location.longitude
+    }]).addTo(map);
+            marker.bindPopup('${title || location.address}');
+            
+            // Disable interactions to match the original behavior
+            map.dragging.disable();
+            map.touchZoom.disable();
+            map.doubleClickZoom.disable();
+            map.scrollWheelZoom.disable();
+            map.boxZoom.disable();
+            map.keyboard.disable();
+        </script>
+    </body>
+    </html>
+    `;
   };
 
   return (
     <View style={[styles.container, style]}>
-      <MapView
+      <WebView
+        source={{ html: generateMapHTML() }}
         style={styles.map}
-        region={region}
-        provider={PROVIDER_GOOGLE}
-        showsUserLocation={false}
-        showsMyLocationButton={false}
-        showsCompass={true}
-        mapType="standard"
         scrollEnabled={false}
-        zoomEnabled={false}
-        rotateEnabled={false}
-        pitchEnabled={false}
-      >
-        <Marker
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          title={title || location.address}
-          description={location.area}
-          pinColor="#2E6A56"
-        />
-      </MapView>
+        scalesPageToFit={false}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 };

@@ -1,6 +1,8 @@
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -12,10 +14,22 @@ import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const VALID_EMAIL = "abc@gmail.com";
+  const VALID_PASSWORD = "abcd123";
 
   const handleLogin = () => {
-    // Simple auto-login - just navigate to onboarding
-    router.push("./onboarding");
+    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+      router.push("./onboarding");
+    } else {
+      Alert.alert(
+        "Login Failed",
+        "Invalid credentials. Please use the test credentials shown below.",
+        [{ text: "OK" }]
+      );
+    }
   };
   return (
     <View style={styles.container}>
@@ -53,6 +67,16 @@ export default function LoginScreen() {
 
         {/* form */}
         <View style={styles.formContainer}>
+          {/* Test Credentials Display */}
+          <Animated.View
+            entering={FadeInDown.delay(100).duration(1000).springify()}
+            style={styles.credentialsContainer}
+          >
+            <Text style={styles.credentialsTitle}>Test Credentials:</Text>
+            <Text style={styles.credentialsText}>Email: abc@gmail.com</Text>
+            <Text style={styles.credentialsText}>Password: abcd123</Text>
+          </Animated.View>
+
           <Animated.View
             entering={FadeInDown.delay(200).duration(1000).springify()}
             style={styles.inputContainer}
@@ -61,6 +85,10 @@ export default function LoginScreen() {
               placeholder="Email"
               placeholderTextColor={"gray"}
               style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
           </Animated.View>
 
@@ -73,6 +101,8 @@ export default function LoginScreen() {
               placeholderTextColor={"gray"}
               secureTextEntry
               style={styles.input}
+              value={password}
+              onChangeText={setPassword}
             />
           </Animated.View>
 
@@ -148,6 +178,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 20,
   },
+  credentialsContainer: {
+    backgroundColor: "rgba(46, 106, 86, 0.9)",
+    padding: 16,
+    borderRadius: 12,
+    width: "100%",
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  credentialsTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 8,
+  },
+  credentialsText: {
+    fontSize: 14,
+    color: "white",
+    opacity: 0.9,
+    marginBottom: 2,
+  },
   inputContainer: {
     backgroundColor: "rgba(0,0,0,0.05)",
     padding: 20,
@@ -163,7 +213,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    backgroundColor: "#0ea5e9",
+    backgroundColor: "#2E6A56",
     padding: 12,
     borderRadius: 16,
     marginBottom: 12,
@@ -179,6 +229,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   linkText: {
-    color: "#0284c7",
+    color: "#5C9479",
   },
 });

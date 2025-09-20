@@ -144,7 +144,6 @@ export default function SearchScreen() {
           />
         </View>
         <View style={styles.reportContent}>
-          <Text style={styles.reportId}>ID: {report.id}</Text>
           <Text style={styles.reportTitle} numberOfLines={2}>
             {report.title}
           </Text>
@@ -582,11 +581,3 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
 });
-
-
-
-
-
-
-
-

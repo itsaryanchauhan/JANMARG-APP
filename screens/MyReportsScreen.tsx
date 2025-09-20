@@ -239,12 +239,6 @@ export default function MyReportsScreen() {
                 <View style={styles.reportContent}>
                   <View style={styles.titleRow}>
                     <Text style={styles.reportTitle}>{report.title}</Text>
-                    <View style={styles.reportIdContainer}>
-                      <Text style={styles.reportIdLabel}>ID:</Text>
-                      <Text style={styles.reportIdText}>
-                        {report.id.slice(-8)}
-                      </Text>
-                    </View>
                   </View>
                   <View style={styles.statusAndAnonymousRow}>
                     {report.isAnonymous && (

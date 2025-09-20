@@ -56,6 +56,14 @@ export default function ProfileScreen() {
         </View>
         <Text style={styles.profileName}>Arjun Sharma</Text>
         <Text style={styles.profileEmail}>arjun.sharma@gmail.com</Text>
+
+        {/* Trust Score */}
+        <View style={styles.trustScoreContainer}>
+          <View style={styles.trustScorePill}>
+            <Ionicons name="shield-checkmark" size={16} color="#FFFFFF" />
+            <Text style={styles.trustScoreText}>Trust Score: 847</Text>
+          </View>
+        </View>
       </View>
 
       {/* Stats Section */}
@@ -146,6 +154,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     opacity: 0.8,
+  },
+  trustScoreContainer: {
+    marginTop: 16,
+    alignItems: "center",
+  },
+  trustScorePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5C9479",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 3,
+  },
+  trustScoreText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    marginLeft: 6,
   },
   statsContainer: {
     flexDirection: "row",
