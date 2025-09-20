@@ -5,6 +5,7 @@ import React from "react";
 import {
   Dimensions,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -24,9 +25,20 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style={isDarkMode ? "light" : "dark"} />
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
+      ]}
+    >
+      <StatusBar
+        style={isDarkMode ? "light" : "dark"}
+        backgroundColor={isDarkMode ? "#1a1a1a" : "#ffffff"}
+      />
       <Swiper
+        style={{ backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" }}
+        removeClippedSubviews={Platform.OS === "android" ? false : true}
+        loadMinimal={Platform.OS === "android" ? false : true}
         buttonWrapperStyle={{
           backgroundColor: "transparent",
           flexDirection: "row",
@@ -98,15 +110,14 @@ export default function OnboardingScreen() {
               { color: isDarkMode ? "#ffffff" : "#000000" },
             ]}
           >
-            React Native UI-kit
+            Report Civic Issues
           </Text>
           <Text
             style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            JANMARG empowers citizens to report civic issues in their community.
+            From potholes to broken streetlights, help make your city better by
+            reporting problems that need attention.
           </Text>
         </View>
 
@@ -127,15 +138,14 @@ export default function OnboardingScreen() {
               { color: isDarkMode ? "#ffffff" : "#000000" },
             ]}
           >
-            Get Started
+            Search & Browse
           </Text>
           <Text
             style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Browse reports in your area and stay informed about ongoing issues.
+            Use the search feature to find specific problems or filter by status
+            to see what's being worked on.
           </Text>
         </View>
 
@@ -156,15 +166,14 @@ export default function OnboardingScreen() {
               { color: isDarkMode ? "#ffffff" : "#000000" },
             ]}
           >
-            Discover
+            Track & Engage
           </Text>
           <Text
             style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Track the progress of your reports and support others by upvoting
+            important issues. View detailed information, see exact locations on
+            maps, and stay updated on resolution status.
           </Text>
         </View>
 
@@ -185,15 +194,14 @@ export default function OnboardingScreen() {
               { color: isDarkMode ? "#ffffff" : "#000000" },
             ]}
           >
-            Welcome to the App
+            Welcome to JANMARG
           </Text>
           <Text
             style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Start making a difference in your community today! Report issues,
+            track progress, and collaborate with fellow citizens to build a
+            better city for everyone.
           </Text>
 
           <TouchableOpacity
@@ -221,11 +229,14 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#ffffff", // Default fallback for Android
   },
   slide: {
     flex: 1,
     paddingTop: 80,
     marginHorizontal: 30,
+    justifyContent: "center",
+    alignItems: "center",
   },
   img: {
     alignSelf: "center",
@@ -234,6 +245,10 @@ const styles = StyleSheet.create({
     height: h * 0.5,
     width: w * 0.9,
     resizeMode: "cover",
+    backgroundColor: "transparent", // Ensure no background color on image
+    ...(Platform.OS === "android" && {
+      backgroundColor: "rgba(255, 255, 255, 0)", // Android-specific transparent background
+    }),
   },
   title: {
     marginTop: 60,

@@ -37,6 +37,10 @@ const ReportMapView: React.FC<ReportMapViewProps> = ({
         showsMyLocationButton={false}
         showsCompass={true}
         mapType="standard"
+        scrollEnabled={false}
+        zoomEnabled={false}
+        rotateEnabled={false}
+        pitchEnabled={false}
       >
         <Marker
           coordinate={{

@@ -34,12 +34,14 @@ export default function HomeScreen() {
   );
   const [showReportDetail, setShowReportDetail] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [showStatusFilter, setShowStatusFilter] = useState(false);
 
   const allReports = getReportsForArea(selectedArea).filter(
     (report) => report.status !== "resolved"
   );
 
-  // Filter reports based on search query
+  // Filter reports based on search query and status
   const filteredReports = searchQuery.trim()
     ? allReports.filter(
         (report) =>
@@ -54,7 +56,11 @@ export default function HomeScreen() {
       )
     : allReports;
 
-  const reportsInArea = filteredReports;
+  // Apply status filter
+  const reportsInArea =
+    statusFilter === "all"
+      ? filteredReports
+      : filteredReports.filter((report) => report.status === statusFilter);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -337,12 +343,61 @@ export default function HomeScreen() {
             {reportsInArea.length === 1 ? "report" : "reports"} found
           </Text>
           <View style={styles.filterButtons}>
-            <TouchableOpacity style={styles.filterButton}>
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => setShowStatusFilter(!showStatusFilter)}
+            >
               <Ionicons name="filter-outline" size={16} color="#666" />
-              <Text style={styles.filterText}>Filter</Text>
+              <Text style={styles.filterText}>{t("filter") || "Filter"}</Text>
+              <Ionicons
+                name={showStatusFilter ? "chevron-up" : "chevron-down"}
+                size={16}
+                color="#666"
+              />
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Status Filter Options */}
+        {showStatusFilter && (
+          <View style={styles.filterOptionsContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {[
+                { key: "all", label: "All", labelHi: "सभी" },
+                { key: "submitted", label: "Submitted", labelHi: "प्रस्तुत" },
+                {
+                  key: "in-progress",
+                  label: "In Progress",
+                  labelHi: "प्रगति में",
+                },
+              ].map((filter) => (
+                <TouchableOpacity
+                  key={filter.key}
+                  style={[
+                    styles.filterChip,
+                    statusFilter === filter.key && styles.activeFilterChip,
+                  ]}
+                  onPress={() => {
+                    setStatusFilter(filter.key);
+                    setShowStatusFilter(false);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.filterChipText,
+                      statusFilter === filter.key &&
+                        styles.activeFilterChipText,
+                    ]}
+                  >
+                    {currentLanguage.code === "hi"
+                      ? filter.labelHi
+                      : filter.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
         {reportsInArea.length === 0 ? (
           <View style={styles.emptyState}>
@@ -707,5 +762,42 @@ const styles = StyleSheet.create({
   clearButton: {
     marginLeft: 8,
     padding: 4,
+  },
+  filterOptionsContainer: {
+    backgroundColor: "#FFFFFF",
+    marginHorizontal: 20,
+    marginBottom: 16,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 3,
+  },
+  filterChip: {
+    backgroundColor: "#EFEFEF",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginHorizontal: 4,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  activeFilterChip: {
+    backgroundColor: "#2E6A56",
+    borderColor: "#2E6A56",
+  },
+  filterChipText: {
+    fontSize: 14,
+    color: "#4A4A4A",
+    fontWeight: "500",
+  },
+  activeFilterChipText: {
+    color: "#FFFFFF",
   },
 });

@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -364,6 +365,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    ...(Platform.OS === "android" && {
+      backgroundColor: "#FFFFFF",
+      borderWidth: 0.5,
+      borderColor: "#f0f0f0",
+    }),
   },
   statItem: {
     flex: 1,
@@ -385,7 +391,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   reportCard: {
-    backgroundColor: "#FFFFFFFFF",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -397,6 +403,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    ...(Platform.OS === "android" && {
+      backgroundColor: "#FFFFFF",
+      borderWidth: 0.5,
+      borderColor: "#f0f0f0",
+    }),
   },
   reportHeader: {
     flexDirection: "row",
@@ -490,6 +501,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    ...(Platform.OS === "android" && {
+      backgroundColor: "#FFFFFF",
+      borderWidth: 0.5,
+      borderColor: "#f0f0f0",
+    }),
   },
   filterButton: {
     flex: 1,
