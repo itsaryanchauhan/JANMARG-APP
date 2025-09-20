@@ -13,11 +13,19 @@ export interface Report {
   };
   timestamp: string;
   status: 'submitted' | 'in-progress' | 'resolved';
+  isAnonymous?: boolean;
+  timeline: {
+    id: string;
+    status: 'submitted' | 'acknowledged' | 'assigned' | 'in-progress' | 'resolved';
+    timestamp: string;
+    description: string;
+    assignedTo?: string;
+  }[];
 }
 
 interface ReportsContextType {
   reports: Report[];
-  addReport: (report: Omit<Report, 'id' | 'timestamp' | 'status'>) => void;
+  addReport: (report: Omit<Report, 'id' | 'timestamp' | 'status' | 'timeline'> & { isAnonymous?: boolean }) => void;
 }
 
 const ReportsContext = createContext<ReportsContextType | undefined>(undefined);
@@ -25,12 +33,23 @@ const ReportsContext = createContext<ReportsContextType | undefined>(undefined);
 export function ReportsProvider({ children }: { children: ReactNode }) {
   const [reports, setReports] = useState<Report[]>([]);
 
-  const addReport = (reportData: Omit<Report, 'id' | 'timestamp' | 'status'>) => {
+  const addReport = (reportData: Omit<Report, 'id' | 'timestamp' | 'status' | 'timeline'> & { isAnonymous?: boolean }) => {
+    const reportId = Date.now().toString();
+    const timestamp = new Date().toISOString();
+    
     const newReport: Report = {
       ...reportData,
-      id: Date.now().toString(),
-      timestamp: new Date().toISOString(),
+      id: reportId,
+      timestamp,
       status: 'submitted',
+      timeline: [
+        {
+          id: `${reportId}-1`,
+          status: 'submitted',
+          timestamp,
+          description: 'Report submitted by ' + (reportData.isAnonymous ? 'anonymous user' : 'user'),
+        }
+      ],
     };
     setReports(prev => [newReport, ...prev]);
   };

@@ -1,31 +1,49 @@
 import React, { useState } from "react";
 import { 
-  ScrollView, 
   StyleSheet, 
   Text, 
   View, 
-  TouchableOpacity,
-  FlatList,
-  Image 
+  TextInput, 
+  TouchableOpacity, 
+  Alert,
+  ScrollView,
+  FlatList
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCommunityReports, CommunityReport } from "../context/CommunityReportsContext";
 import ReportDetailModal from "../components/ReportDetailModal";
 
-export default function HomeScreen() {
-  const { 
-    selectedArea, 
-    areas, 
-    setSelectedArea, 
-    toggleUpvote, 
-    getReportsForArea 
-  } = useCommunityReports();
-  
-  const [showAreaSelector, setShowAreaSelector] = useState(false);
+export default function SearchScreen() {
+  const { searchReports, toggleUpvote } = useCommunityReports();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null);
   const [showReportDetail, setShowReportDetail] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
-  const reportsInArea = getReportsForArea(selectedArea).filter(report => report.status !== 'resolved');
+  const handleSearch = () => {
+    if (!searchQuery.trim()) {
+      Alert.alert("Error", "Please enter a report ID to search");
+      return;
+    }
+
+    const results = searchReports(searchQuery);
+    setSearchResults(results);
+    setHasSearched(true);
+
+    if (results.length === 0) {
+      Alert.alert(
+        "No Results", 
+        `No reports found matching "${searchQuery}". Try searching by report ID (e.g., CR001) or keywords.`
+      );
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+    setHasSearched(false);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -82,9 +100,20 @@ export default function HomeScreen() {
       };
       setSelectedReport(updatedReport);
     }
+    // Update search results if they contain this report
+    setSearchResults(prev => prev.map(report => {
+      if (report.id === reportId) {
+        return {
+          ...report,
+          upvotes: report.hasUserUpvoted ? report.upvotes - 1 : report.upvotes + 1,
+          hasUserUpvoted: !report.hasUserUpvoted
+        };
+      }
+      return report;
+    }));
   };
 
-  const renderReportCard = ({ item: report }: { item: any }) => (
+  const renderSearchResult = ({ item: report }: { item: any }) => (
     <TouchableOpacity 
       style={styles.reportCard}
       onPress={() => handleReportPress(report)}
@@ -98,6 +127,7 @@ export default function HomeScreen() {
           />
         </View>
         <View style={styles.reportContent}>
+          <Text style={styles.reportId}>ID: {report.id}</Text>
           <Text style={styles.reportTitle} numberOfLines={2}>{report.title}</Text>
           <Text style={styles.reportLocation}>{report.location.address}</Text>
           <View style={styles.reportMeta}>
@@ -141,92 +171,88 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Area Selector */}
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <Text style={styles.welcomeText}>Reports in your area</Text>
-          <TouchableOpacity style={styles.notificationButton}>
-            <Ionicons name="notifications-outline" size={24} color="#333" />
-          </TouchableOpacity>
+        <Text style={styles.headerTitle}>Search Reports</Text>
+        <Text style={styles.headerSubtitle}>
+          Search by report ID, keywords, or reporter name
+        </Text>
+      </View>
+
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputContainer}>
+          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Enter report ID (e.g., CR001) or keywords..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+            autoCapitalize="none"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+              <Ionicons name="close-circle" size={20} color="#999" />
+            </TouchableOpacity>
+          )}
         </View>
         
         <TouchableOpacity 
-          style={styles.areaSelector}
-          onPress={() => setShowAreaSelector(!showAreaSelector)}
+          style={[styles.searchButton, !searchQuery.trim() && styles.searchButtonDisabled]}
+          onPress={handleSearch}
+          disabled={!searchQuery.trim()}
         >
-          <View style={styles.areaSelectorContent}>
-            <Ionicons name="location" size={20} color="#e32f45" />
-            <Text style={styles.selectedAreaText}>{selectedArea}</Text>
-          </View>
-          <Ionicons 
-            name={showAreaSelector ? "chevron-up" : "chevron-down"} 
-            size={20} 
-            color="#666" 
-          />
+          <Text style={[styles.searchButtonText, !searchQuery.trim() && styles.searchButtonTextDisabled]}>
+            Search
+          </Text>
         </TouchableOpacity>
-
-        {/* Area Dropdown */}
-        {showAreaSelector && (
-          <View style={styles.areaDropdown}>
-            <ScrollView style={styles.areaList} showsVerticalScrollIndicator={false}>
-              {areas.map((area) => (
-                <TouchableOpacity
-                  key={area}
-                  style={[
-                    styles.areaItem,
-                    selectedArea === area && styles.areaItemSelected
-                  ]}
-                  onPress={() => {
-                    setSelectedArea(area);
-                    setShowAreaSelector(false);
-                  }}
-                >
-                  <Text style={[
-                    styles.areaItemText,
-                    selectedArea === area && styles.areaItemTextSelected
-                  ]}>
-                    {area}
-                  </Text>
-                  {selectedArea === area && (
-                    <Ionicons name="checkmark" size={20} color="#e32f45" />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
       </View>
 
-      {/* Reports List */}
+      {/* Search Results */}
       <View style={styles.content}>
-        <View style={styles.statsRow}>
-          <Text style={styles.statsText}>
-            {reportsInArea.length} {reportsInArea.length === 1 ? 'report' : 'reports'} found
-          </Text>
-          <View style={styles.filterButtons}>
-            <TouchableOpacity style={styles.filterButton}>
-              <Ionicons name="filter-outline" size={16} color="#666" />
-              <Text style={styles.filterText}>Filter</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {reportsInArea.length === 0 ? (
+        {!hasSearched ? (
           <View style={styles.emptyState}>
-            <Ionicons name="location-outline" size={64} color="#ccc" />
-            <Text style={styles.emptyTitle}>No Reports in {selectedArea}</Text>
+            <Ionicons name="search-outline" size={64} color="#ccc" />
+            <Text style={styles.emptyTitle}>Search for Reports</Text>
             <Text style={styles.emptySubtitle}>
-              This area looks good! Be the first to report any issues.
+              Enter a report ID like "CR001" or use keywords to find specific reports
+            </Text>
+            <View style={styles.exampleContainer}>
+              <Text style={styles.exampleTitle}>Example searches:</Text>
+              <Text style={styles.exampleText}>• CR001 (specific report ID)</Text>
+              <Text style={styles.exampleText}>• pothole (issue type)</Text>
+              <Text style={styles.exampleText}>• Arjun (reporter name)</Text>
+              <Text style={styles.exampleText}>• Delhi (location)</Text>
+            </View>
+          </View>
+        ) : searchResults.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Ionicons name="document-outline" size={64} color="#ccc" />
+            <Text style={styles.emptyTitle}>No Reports Found</Text>
+            <Text style={styles.emptySubtitle}>
+              No reports match your search "{searchQuery}". Try different keywords or report IDs.
             </Text>
           </View>
         ) : (
-          <FlatList
-            data={reportsInArea}
-            renderItem={renderReportCard}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.reportsList}
-          />
+          <>
+            <View style={styles.resultsHeader}>
+              <Text style={styles.resultsCount}>
+                {searchResults.length} {searchResults.length === 1 ? 'result' : 'results'} found
+              </Text>
+              <TouchableOpacity onPress={clearSearch} style={styles.clearResultsButton}>
+                <Text style={styles.clearResultsText}>Clear</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <FlatList
+              data={searchResults}
+              renderItem={renderSearchResult}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.resultsList}
+            />
+          </>
         )}
       </View>
 
@@ -250,106 +276,126 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingTop: 10,
     paddingHorizontal: 20,
-    paddingBottom: 15,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
-    zIndex: 1000,
   },
-  headerTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  welcomeText: {
-    fontSize: 18,
-    fontWeight: "600",
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "700",
     color: "#333",
+    marginBottom: 5,
   },
-  notificationButton: {
-    padding: 5,
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#666",
   },
-  areaSelector: {
+  searchContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  searchInputContainer: {
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f8f9fa",
-    padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    marginRight: 10,
     borderWidth: 1,
     borderColor: "#e0e0e0",
   },
-  areaSelectorContent: {
-    flexDirection: "row",
-    alignItems: "center",
+  searchIcon: {
+    marginRight: 8,
   },
-  selectedAreaText: {
+  searchInput: {
+    flex: 1,
+    height: 44,
     fontSize: 16,
-    fontWeight: "500",
     color: "#333",
+  },
+  clearButton: {
     marginLeft: 8,
   },
-  areaDropdown: {
-    position: "absolute",
-    top: 85,
-    left: 20,
-    right: 20,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    maxHeight: 200,
-    zIndex: 1001,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+  searchButton: {
+    backgroundColor: "#e32f45",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 10,
+    justifyContent: "center",
   },
-  areaList: {
-    maxHeight: 180,
+  searchButtonDisabled: {
+    backgroundColor: "#ccc",
   },
-  areaItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-  },
-  areaItemSelected: {
-    backgroundColor: "#f8f9fa",
-  },
-  areaItemText: {
+  searchButtonText: {
+    color: "#fff",
+    fontWeight: "600",
     fontSize: 16,
-    color: "#333",
   },
-  areaItemTextSelected: {
-    color: "#e32f45",
-    fontWeight: "500",
+  searchButtonTextDisabled: {
+    color: "#999",
   },
   content: {
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 15,
   },
-  statsRow: {
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 60,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    lineHeight: 20,
+    marginBottom: 20,
+  },
+  exampleContainer: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    width: "100%",
+    maxWidth: 300,
+  },
+  exampleTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+  },
+  exampleText: {
+    fontSize: 13,
+    color: "#666",
+    marginBottom: 4,
+  },
+  resultsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 15,
   },
-  statsText: {
+  resultsCount: {
     fontSize: 14,
     color: "#666",
     fontWeight: "500",
   },
-  filterButtons: {
-    flexDirection: "row",
-  },
-  filterButton: {
-    flexDirection: "row",
-    alignItems: "center",
+  clearResultsButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 15,
@@ -357,12 +403,11 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     backgroundColor: "#fff",
   },
-  filterText: {
+  clearResultsText: {
     fontSize: 12,
     color: "#666",
-    marginLeft: 4,
   },
-  reportsList: {
+  resultsList: {
     paddingBottom: 20,
   },
   reportCard: {
@@ -394,6 +439,12 @@ const styles = StyleSheet.create({
   reportContent: {
     flex: 1,
     marginRight: 12,
+  },
+  reportId: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#e32f45",
+    marginBottom: 2,
   },
   reportTitle: {
     fontSize: 16,
@@ -472,24 +523,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#999",
     marginRight: 4,
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 60,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptySubtitle: {
-    fontSize: 14,
-    color: "#666",
-    textAlign: "center",
-    lineHeight: 20,
   },
 });

@@ -47,6 +47,7 @@ export default function CreateReportModal({
   const [currentLocation, setCurrentLocation] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   const { addReport } = useReports();
 
@@ -203,6 +204,7 @@ export default function CreateReportModal({
       type: selectedIssueType as any,
       imageUri: selectedImage || undefined,
       location: currentLocation,
+      isAnonymous: isAnonymous,
     });
 
     setIsSubmitting(false);
@@ -222,6 +224,7 @@ export default function CreateReportModal({
     setSelectedImage(null);
     setSelectedIssueType(null);
     setCurrentLocation(null);
+    setIsAnonymous(false);
   };
 
   const handleClose = () => {
@@ -360,6 +363,26 @@ export default function CreateReportModal({
               </View>
             </View>
           )}
+
+          {/* Anonymous Option */}
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={styles.anonymousContainer}
+              onPress={() => setIsAnonymous(!isAnonymous)}
+            >
+              <View style={[styles.checkbox, isAnonymous && styles.checkboxChecked]}>
+                {isAnonymous && (
+                  <Ionicons name="checkmark" size={16} color="#fff" />
+                )}
+              </View>
+              <View style={styles.anonymousTextContainer}>
+                <Text style={styles.anonymousTitle}>Post Anonymously</Text>
+                <Text style={styles.anonymousSubtitle}>
+                  Your identity will be hidden from other users
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     </Modal>
@@ -532,5 +555,43 @@ const styles = StyleSheet.create({
     color: "#333",
     marginLeft: 8,
     flex: 1,
+  },
+  anonymousContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: "#e9ecef",
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  checkboxChecked: {
+    backgroundColor: "#e32f45",
+    borderColor: "#e32f45",
+  },
+  anonymousTextContainer: {
+    flex: 1,
+  },
+  anonymousTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 2,
+  },
+  anonymousSubtitle: {
+    fontSize: 13,
+    color: "#666",
+    lineHeight: 18,
   },
 });

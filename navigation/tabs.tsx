@@ -7,7 +7,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CreateReportModal from "../components/CreateReportModal";
 import CreateReportScreen from "../screens/CreateReportScreen";
 import HomeScreen from "../screens/HomeScreen";
-import PlaceholderScreen from "../screens/PlaceholderScreen";
+import SearchScreen from "../screens/SearchScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import MyReportsScreen from "../screens/MyReportsScreen";
 
@@ -80,13 +80,13 @@ const Tabs = () => {
         />
 
         <Tab.Screen
-          name="Placeholder"
-          component={PlaceholderScreen}
+          name="Search"
+          component={SearchScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabItem}>
                 <Ionicons
-                  name={focused ? "apps" : "apps-outline"}
+                  name={focused ? "search" : "search-outline"}
                   size={25}
                   color={focused ? "#e32f45" : "#748c94"}
                 />
@@ -98,7 +98,7 @@ const Tabs = () => {
                     },
                   ]}
                 >
-                  MENU
+                  SEARCH
                 </Text>
               </View>
             ),
