@@ -13,7 +13,7 @@ export default function CreateReportScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        <Ionicons name="document-text" size={32} color="#e32f45" />
+        <Ionicons name="document-text" size={32} color="#2E6A56" />
         <Text style={styles.title}>Create Report</Text>
         <Text style={styles.subtitle}>Submit a new report or incident</Text>
       </View>
@@ -64,7 +64,7 @@ export default function CreateReportScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   content: {
     padding: 20,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   form: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 20,
     shadowColor: "#000",
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     color: "#999",
   },
   submitButton: {
-    backgroundColor: "#e32f45",
+    backgroundColor: "#2E6A56",
     borderRadius: 8,
     padding: 16,
     flexDirection: "row",
@@ -152,3 +152,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+
+

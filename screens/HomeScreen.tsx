@@ -5,9 +5,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
-  Modal,
 } from "react-native";
 import ReportDetailModal from "../components/ReportDetailModal";
 import {
@@ -24,7 +24,7 @@ export default function HomeScreen() {
     toggleUpvote,
     getReportsForArea,
   } = useCommunityReports();
-  
+
   const { currentLanguage, setLanguage, availableLanguages, t } = useLanguage();
 
   const [showAreaSelector, setShowAreaSelector] = useState(false);
@@ -33,21 +33,39 @@ export default function HomeScreen() {
     null
   );
   const [showReportDetail, setShowReportDetail] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const reportsInArea = getReportsForArea(selectedArea).filter(
+  const allReports = getReportsForArea(selectedArea).filter(
     (report) => report.status !== "resolved"
   );
+
+  // Filter reports based on search query
+  const filteredReports = searchQuery.trim()
+    ? allReports.filter(
+        (report) =>
+          report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          report.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          report.location.address
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          report.location.area.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : allReports;
+
+  const reportsInArea = filteredReports;
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "submitted":
-        return "#ffc107";
+        return "#5C9479";
       case "in-progress":
-        return "#007bff";
+        return "#2E6A56";
       case "resolved":
-        return "#28a745";
+        return "#2E6A56";
       default:
-        return "#6c757d";
+        return "#4A4A4A";
     }
   };
 
@@ -158,7 +176,7 @@ export default function HomeScreen() {
           <Ionicons
             name={report.hasUserUpvoted ? "heart" : "heart-outline"}
             size={18}
-            color={report.hasUserUpvoted ? "#fff" : "#e32f45"}
+            color={report.hasUserUpvoted ? "#FFFFFF" : "#2E6A56"}
           />
           <Text
             style={[
@@ -183,13 +201,13 @@ export default function HomeScreen() {
       {/* Area Selector */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <Text style={styles.welcomeText}>{t('welcome')}</Text>
-          <TouchableOpacity 
+          <Text style={styles.welcomeText}>{t("welcome")}</Text>
+          <TouchableOpacity
             style={styles.languageButton}
             onPress={() => setShowLanguageSelector(!showLanguageSelector)}
           >
             <Text style={styles.languageFlag}>{currentLanguage.flag}</Text>
-            <Ionicons name="chevron-down" size={16} color="#333" />
+            <Ionicons name="chevron-down" size={16} color="#4A4A4A" />
           </TouchableOpacity>
         </View>
 
@@ -198,7 +216,7 @@ export default function HomeScreen() {
           onPress={() => setShowAreaSelector(!showAreaSelector)}
         >
           <View style={styles.areaSelectorContent}>
-            <Ionicons name="location" size={20} color="#e32f45" />
+            <Ionicons name="location" size={20} color="#2E6A56" />
             <Text style={styles.selectedAreaText}>{selectedArea}</Text>
           </View>
           <Ionicons
@@ -212,8 +230,10 @@ export default function HomeScreen() {
         {showAreaSelector && (
           <View style={styles.areaDropdown}>
             <ScrollView
-              style={styles.areaList}
-              showsVerticalScrollIndicator={false}
+              style={styles.areaScrollView}
+              showsVerticalScrollIndicator={true}
+              nestedScrollEnabled={true}
+              keyboardShouldPersistTaps="handled"
             >
               {areas.map((area) => (
                 <TouchableOpacity
@@ -236,7 +256,7 @@ export default function HomeScreen() {
                     {area}
                   </Text>
                   {selectedArea === area && (
-                    <Ionicons name="checkmark" size={20} color="#e32f45" />
+                    <Ionicons name="checkmark" size={20} color="#2E6A56" />
                   )}
                 </TouchableOpacity>
               ))}
@@ -256,7 +276,8 @@ export default function HomeScreen() {
                   key={language.code}
                   style={[
                     styles.languageItem,
-                    currentLanguage.code === language.code && styles.languageItemSelected,
+                    currentLanguage.code === language.code &&
+                      styles.languageItemSelected,
                   ]}
                   onPress={() => {
                     setLanguage(language);
@@ -267,18 +288,44 @@ export default function HomeScreen() {
                   <Text
                     style={[
                       styles.languageItemText,
-                      currentLanguage.code === language.code && styles.languageItemTextSelected,
+                      currentLanguage.code === language.code &&
+                        styles.languageItemTextSelected,
                     ]}
                   >
                     {language.name}
                   </Text>
                   {currentLanguage.code === language.code && (
-                    <Ionicons name="checkmark" size={20} color="#e32f45" />
+                    <Ionicons name="checkmark" size={20} color="#2E6A56" />
                   )}
                 </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
+        )}
+      </View>
+
+      {/* Search Input */}
+      <View style={styles.searchContainer}>
+        <Ionicons
+          name="search"
+          size={20}
+          color="#666"
+          style={styles.searchIcon}
+        />
+        <TextInput
+          style={styles.searchInput}
+          placeholder={t("search") || "Search reports..."}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor="#999"
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity
+            onPress={() => setSearchQuery("")}
+            style={styles.clearButton}
+          >
+            <Ionicons name="close-circle" size={20} color="#999" />
+          </TouchableOpacity>
         )}
       </View>
 
@@ -330,10 +377,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   header: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     paddingTop: 10,
     paddingHorizontal: 20,
     paddingBottom: 15,
@@ -350,13 +397,13 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: "#4A4A4A",
   },
   languageButton: {
     flexDirection: "row",
     alignItems: "center",
     padding: 8,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "#e0e0e0",
@@ -369,7 +416,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
@@ -382,7 +429,7 @@ const styles = StyleSheet.create({
   selectedAreaText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#333",
+    color: "#4A4A4A",
     marginLeft: 8,
   },
   areaDropdown: {
@@ -390,11 +437,11 @@ const styles = StyleSheet.create({
     top: 85,
     left: 20,
     right: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    maxHeight: 200,
+    maxHeight: 320,
     zIndex: 1001,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -402,8 +449,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  areaList: {
-    maxHeight: 180,
+  areaScrollView: {
+    maxHeight: 300,
   },
   areaItem: {
     flexDirection: "row",
@@ -414,21 +461,21 @@ const styles = StyleSheet.create({
     borderBottomColor: "#f0f0f0",
   },
   areaItemSelected: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   areaItemText: {
     fontSize: 16,
-    color: "#333",
+    color: "#4A4A4A",
   },
   areaItemTextSelected: {
-    color: "#e32f45",
+    color: "#2E6A56",
     fontWeight: "500",
   },
   languageDropdown: {
     position: "absolute",
     top: 85,
     right: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#e0e0e0",
@@ -452,16 +499,16 @@ const styles = StyleSheet.create({
     borderBottomColor: "#f0f0f0",
   },
   languageItemSelected: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   languageItemText: {
     fontSize: 14,
-    color: "#333",
+    color: "#4A4A4A",
     marginLeft: 8,
     flex: 1,
   },
   languageItemTextSelected: {
-    color: "#e32f45",
+    color: "#2E6A56",
     fontWeight: "500",
   },
   content: {
@@ -491,7 +538,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
   },
   filterText: {
     fontSize: 12,
@@ -502,7 +549,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   reportCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     marginBottom: 15,
@@ -534,7 +581,7 @@ const styles = StyleSheet.create({
   reportTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 4,
     lineHeight: 20,
   },
@@ -563,7 +610,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 10,
-    color: "#fff",
+    color: "#FFFFFF",
     fontWeight: "600",
     textAlign: "center",
   },
@@ -585,20 +632,20 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#e32f45",
-    backgroundColor: "#fff",
+    borderColor: "#2E6A56",
+    backgroundColor: "#FFFFFF",
   },
   upvoteButtonActive: {
-    backgroundColor: "#e32f45",
+    backgroundColor: "#2E6A56",
   },
   upvoteCount: {
     fontSize: 12,
-    color: "#e32f45",
+    color: "#2E6A56",
     fontWeight: "500",
     marginLeft: 4,
   },
   upvoteCountActive: {
-    color: "#fff",
+    color: "#FFFFFF",
   },
   viewDetailsContainer: {
     flexDirection: "row",
@@ -618,7 +665,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: "#4A4A4A",
     marginTop: 16,
     marginBottom: 8,
   },
@@ -627,5 +674,38 @@ const styles = StyleSheet.create({
     color: "#666",
     textAlign: "center",
     lineHeight: 20,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    marginHorizontal: 20,
+    marginVertical: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  searchIcon: {
+    marginRight: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#4A4A4A",
+    paddingVertical: 0,
+  },
+  clearButton: {
+    marginLeft: 8,
+    padding: 4,
   },
 });

@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { CommunityReport } from "../context/CommunityReportsContext";
+import ReportMapView from "./ReportMapView";
 
 interface ReportDetailModalProps {
   visible: boolean;
@@ -29,17 +30,17 @@ export default function ReportDetailModal({
   const getStatusColor = (status: string) => {
     switch (status) {
       case "submitted":
-        return "#ffc107";
+        return "#5C9479";
       case "acknowledged":
         return "#17a2b8";
       case "assigned":
         return "#6f42c1";
       case "in-progress":
-        return "#007bff";
+        return "#2E6A56";
       case "resolved":
-        return "#28a745";
+        return "#2E6A56";
       default:
-        return "#6c757d";
+        return "#4A4A4A";
     }
   };
 
@@ -126,7 +127,7 @@ export default function ReportDetailModal({
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color="#333" />
+            <Ionicons name="close" size={28} color="#4A4A4A" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Report Details</Text>
           <View style={styles.placeholder} />
@@ -189,14 +190,25 @@ export default function ReportDetailModal({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Location</Text>
             <View style={styles.locationContainer}>
-              <Ionicons name="location" size={20} color="#e32f45" />
+              <Ionicons name="location" size={20} color="#2E6A56" />
               <View style={styles.locationInfo}>
                 <Text style={styles.locationAddress}>
                   {report.location.address}
                 </Text>
                 <Text style={styles.locationArea}>{report.location.area}</Text>
+                <Text style={styles.coordinates}>
+                  {report.location.latitude.toFixed(6)},{" "}
+                  {report.location.longitude.toFixed(6)}
+                </Text>
               </View>
             </View>
+
+            {/* Map View */}
+            <ReportMapView
+              location={report.location}
+              title={report.title}
+              style={styles.mapContainer}
+            />
           </View>
 
           {/* Timeline */}
@@ -222,9 +234,9 @@ export default function ReportDetailModal({
                           size={16}
                           color={
                             entry.timestamp
-                              ? "#fff"
+                              ? "#FFFFFF"
                               : isCurrent
-                              ? "#e32f45"
+                              ? "#2E6A56"
                               : "#ccc"
                           }
                         />
@@ -286,7 +298,7 @@ export default function ReportDetailModal({
               <Ionicons
                 name={report.hasUserUpvoted ? "heart" : "heart-outline"}
                 size={24}
-                color={report.hasUserUpvoted ? "#fff" : "#e32f45"}
+                color={report.hasUserUpvoted ? "#FFFFFF" : "#2E6A56"}
               />
               <Text
                 style={[
@@ -309,7 +321,7 @@ export default function ReportDetailModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   header: {
     flexDirection: "row",
@@ -318,7 +330,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 15,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#e9ecef",
   },
@@ -331,7 +343,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#4A4A4A",
   },
   placeholder: {
     width: 40,
@@ -344,7 +356,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 30,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 20,
     borderRadius: 12,
     shadowColor: "#000",
@@ -370,7 +382,7 @@ const styles = StyleSheet.create({
   reportTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 8,
   },
   statusBadge: {
@@ -381,7 +393,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
-    color: "#fff",
+    color: "#FFFFFF",
     fontWeight: "600",
   },
   section: {
@@ -390,13 +402,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 12,
   },
   reporterContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 12,
     shadowColor: "#000",
@@ -423,7 +435,7 @@ const styles = StyleSheet.create({
   reporterName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 2,
   },
   reportTime: {
@@ -431,11 +443,11 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   description: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 12,
     fontSize: 16,
-    color: "#333",
+    color: "#4A4A4A",
     lineHeight: 24,
     shadowColor: "#000",
     shadowOffset: {
@@ -449,7 +461,7 @@ const styles = StyleSheet.create({
   locationContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 12,
     shadowColor: "#000",
@@ -468,7 +480,7 @@ const styles = StyleSheet.create({
   locationAddress: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 2,
   },
   locationArea: {
@@ -484,11 +496,11 @@ const styles = StyleSheet.create({
   upvoteButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: "#e32f45",
+    borderColor: "#2E6A56",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -499,20 +511,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   upvoteButtonActive: {
-    backgroundColor: "#e32f45",
-    borderColor: "#e32f45",
+    backgroundColor: "#2E6A56",
+    borderColor: "#2E6A56",
   },
   upvoteText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#e32f45",
+    color: "#2E6A56",
     marginLeft: 12,
   },
   upvoteTextActive: {
-    color: "#fff",
+    color: "#FFFFFF",
   },
   timelineContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 20,
     shadowColor: "#000",
@@ -544,12 +556,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   timelineIconCurrent: {
-    borderColor: "#e32f45",
-    backgroundColor: "#fff",
+    borderColor: "#2E6A56",
+    backgroundColor: "#FFFFFF",
   },
   timelineIconCompleted: {
-    backgroundColor: "#28a745",
-    borderColor: "#28a745",
+    backgroundColor: "#2E6A56",
+    borderColor: "#2E6A56",
   },
   timelineLine: {
     width: 2,
@@ -557,7 +569,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e9ecef",
   },
   timelineLineCompleted: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#2E6A56",
   },
   timelineContent: {
     flex: 1,
@@ -570,10 +582,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   timelineTitleCompleted: {
-    color: "#333",
+    color: "#4A4A4A",
   },
   timelineTitleCurrent: {
-    color: "#e32f45",
+    color: "#2E6A56",
   },
   timelineTimestamp: {
     fontSize: 14,
@@ -583,5 +595,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#999",
     fontStyle: "italic",
+  },
+  coordinates: {
+    fontSize: 12,
+    color: "#999",
+    fontFamily: "monospace",
+    marginTop: 4,
+  },
+  mapContainer: {
+    marginTop: 12,
+    height: 200,
   },
 });

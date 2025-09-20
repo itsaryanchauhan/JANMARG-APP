@@ -54,24 +54,24 @@ export default function ProfileScreen() {
             <Ionicons name="camera" size={16} color="white" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.profileName}>John Doe</Text>
-        <Text style={styles.profileEmail}>john.doe@example.com</Text>
+        <Text style={styles.profileName}>Arjun Sharma</Text>
+        <Text style={styles.profileEmail}>arjun.sharma@gmail.com</Text>
       </View>
 
       {/* Stats Section */}
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>12</Text>
+          <Text style={styles.statNumber}>8</Text>
           <Text style={styles.statLabel}>Reports</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>4.8</Text>
+          <Text style={styles.statNumber}>4.6</Text>
           <Text style={styles.statLabel}>Rating</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>24</Text>
+          <Text style={styles.statNumber}>45</Text>
           <Text style={styles.statLabel}>Days Active</Text>
         </View>
       </View>
@@ -82,7 +82,7 @@ export default function ProfileScreen() {
           <TouchableOpacity key={index} style={styles.optionItem}>
             <View style={styles.optionLeft}>
               <View style={styles.optionIconContainer}>
-                <Ionicons name={option.icon as any} size={24} color="#e32f45" />
+                <Ionicons name={option.icon as any} size={24} color="#2E6A56" />
               </View>
               <View style={styles.optionContent}>
                 <Text style={styles.optionTitle}>{option.title}</Text>
@@ -100,13 +100,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   content: {
     paddingBottom: 120,
   },
   profileHeader: {
-    backgroundColor: "#e32f45",
+    backgroundColor: "#2E6A56",
     alignItems: "center",
     paddingVertical: 40,
     paddingHorizontal: 20,
@@ -119,11 +119,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 4,
-    borderColor: "#fff",
+    borderColor: "#FFFFFF",
   },
   editAvatarButton: {
     position: "absolute",
@@ -139,17 +139,17 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#FFFFFF",
     marginBottom: 4,
   },
   profileEmail: {
     fontSize: 16,
-    color: "#fff",
+    color: "#FFFFFF",
     opacity: 0.8,
   },
   statsContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     marginHorizontal: 20,
     marginTop: -20,
     borderRadius: 12,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   optionsContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     marginHorizontal: 20,
     borderRadius: 12,
     shadowColor: "#000",
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#e32f4520",
+    backgroundColor: "#2E6A5620",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 16,

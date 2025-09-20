@@ -74,7 +74,7 @@ const Tabs = () => {
       bottom: 15,
       left: responsive.margin,
       right: responsive.margin,
-      backgroundColor: "#ffffff",
+      backgroundColor: "#FFFFFF",
       borderRadius: 20,
       height: responsive.navbarHeight,
       paddingBottom: isTablet ? 15 : 10,
@@ -86,11 +86,11 @@ const Tabs = () => {
       width: responsive.buttonSize,
       height: responsive.buttonSize,
       borderRadius: responsive.buttonSize / 2,
-      backgroundColor: "#e32f45",
+      backgroundColor: "#2E6A56",
       justifyContent: "center",
       alignItems: "center",
       borderWidth: 3,
-      borderColor: "#ffffff",
+      borderColor: "#FFFFFF",
     },
     tabItem: {
       alignItems: "center",
@@ -150,13 +150,13 @@ const Tabs = () => {
                 <Ionicons
                   name={focused ? "home" : "home-outline"}
                   size={responsive.iconSize}
-                  color={focused ? "#e32f45" : "#748c94"}
+                  color={focused ? "#2E6A56" : "#6b7280"}
                 />
                 <Text
                   style={[
                     dynamicStyles.tabLabel,
                     {
-                      color: focused ? "#e32f45" : "#748c94",
+                      color: focused ? "#2E6A56" : "#6b7280",
                     },
                   ]}
                   adjustsFontSizeToFit
@@ -178,13 +178,13 @@ const Tabs = () => {
                 <Ionicons
                   name={focused ? "search" : "search-outline"}
                   size={responsive.iconSize}
-                  color={focused ? "#e32f45" : "#748c94"}
+                  color={focused ? "#2E6A56" : "#6b7280"}
                 />
                 <Text
                   style={[
                     dynamicStyles.tabLabel,
                     {
-                      color: focused ? "#e32f45" : "#748c94",
+                      color: focused ? "#2E6A56" : "#6b7280",
                     },
                   ]}
                   adjustsFontSizeToFit
@@ -202,7 +202,7 @@ const Tabs = () => {
           component={CreateReportScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <Ionicons name="document-text" size={28} color="#fff" />
+              <Ionicons name="document-text" size={28} color="#FFFFFF" />
             ),
             tabBarButton: (props) => (
               <CustomTabBarButton
@@ -222,13 +222,13 @@ const Tabs = () => {
                 <Ionicons
                   name={focused ? "document-text" : "document-text-outline"}
                   size={responsive.iconSize}
-                  color={focused ? "#e32f45" : "#748c94"}
+                  color={focused ? "#2E6A56" : "#6b7280"}
                 />
                 <Text
                   style={[
                     dynamicStyles.tabLabel,
                     {
-                      color: focused ? "#e32f45" : "#748c94",
+                      color: focused ? "#2E6A56" : "#6b7280",
                     },
                   ]}
                   adjustsFontSizeToFit
@@ -250,13 +250,13 @@ const Tabs = () => {
                 <Ionicons
                   name={focused ? "person" : "person-outline"}
                   size={responsive.iconSize}
-                  color={focused ? "#e32f45" : "#748c94"}
+                  color={focused ? "#2E6A56" : "#6b7280"}
                 />
                 <Text
                   style={[
                     dynamicStyles.tabLabel,
                     {
-                      color: focused ? "#e32f45" : "#748c94",
+                      color: focused ? "#2E6A56" : "#6b7280",
                     },
                   ]}
                   adjustsFontSizeToFit

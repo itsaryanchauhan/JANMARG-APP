@@ -271,7 +271,7 @@ export default function CreateReportModal({
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color="#333" />
+            <Ionicons name="close" size={28} color="#4A4A4A" />
           </TouchableOpacity>
           <Text style={styles.title}>Create Report</Text>
           <TouchableOpacity
@@ -311,7 +311,7 @@ export default function CreateReportModal({
                     name={issue.icon as any}
                     size={24}
                     color={
-                      selectedIssueType === issue.value ? "#fff" : "#e32f45"
+                      selectedIssueType === issue.value ? "#FFFFFF" : "#2E6A56"
                     }
                   />
                   <Text
@@ -346,11 +346,11 @@ export default function CreateReportModal({
                   style={styles.removeImageButton}
                   onPress={removeImage}
                 >
-                  <Ionicons name="close-circle" size={24} color="#e32f45" />
+                  <Ionicons name="close-circle" size={24} color="#2E6A56" />
                 </TouchableOpacity>
                 {currentLocation && (
                   <View style={styles.locationOverlay}>
-                    <Ionicons name="location" size={16} color="#fff" />
+                    <Ionicons name="location" size={16} color="#FFFFFF" />
                     <Text style={styles.locationText}>
                       {currentLocation.address || "Location captured"}
                     </Text>
@@ -362,7 +362,7 @@ export default function CreateReportModal({
                 style={styles.photoButton}
                 onPress={showImageOptions}
               >
-                <Ionicons name="camera" size={32} color="#e32f45" />
+                <Ionicons name="camera" size={32} color="#2E6A56" />
                 <Text style={styles.photoButtonText}>Tap to add photo</Text>
                 <Text style={styles.photoButtonSubtext}>
                   Camera or Gallery • Location auto-captured
@@ -406,7 +406,7 @@ export default function CreateReportModal({
                 <Ionicons
                   name={isGettingLocation ? "hourglass" : "location"}
                   size={24}
-                  color={isGettingLocation ? "#999" : "#e32f45"}
+                  color={isGettingLocation ? "#999" : "#2E6A56"}
                 />
                 <Text
                   style={[
@@ -435,7 +435,7 @@ export default function CreateReportModal({
                   <Ionicons
                     name="refresh"
                     size={16}
-                    color={isGettingLocation ? "#999" : "#e32f45"}
+                    color={isGettingLocation ? "#999" : "#2E6A56"}
                   />
                   <Text
                     style={[
@@ -449,7 +449,7 @@ export default function CreateReportModal({
               </View>
               <View style={styles.locationSection}>
                 <View style={styles.locationInfoContainer}>
-                  <Ionicons name="location" size={20} color="#e32f45" />
+                  <Ionicons name="location" size={20} color="#2E6A56" />
                   <View style={styles.locationDetails}>
                     <Text style={styles.locationInfoText}>
                       {currentLocation.address}
@@ -485,7 +485,7 @@ export default function CreateReportModal({
                       description={currentLocation.address}
                     >
                       <View style={styles.markerContainer}>
-                        <Ionicons name="location" size={30} color="#e32f45" />
+                        <Ionicons name="location" size={30} color="#2E6A56" />
                       </View>
                     </Marker>
                   </MapView>
@@ -521,7 +521,7 @@ export default function CreateReportModal({
                 style={[styles.checkbox, isAnonymous && styles.checkboxChecked]}
               >
                 {isAnonymous && (
-                  <Ionicons name="checkmark" size={16} color="#fff" />
+                  <Ionicons name="checkmark" size={16} color="#FFFFFF" />
                 )}
               </View>
               <View style={styles.anonymousTextContainer}>
@@ -541,7 +541,7 @@ export default function CreateReportModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   header: {
     flexDirection: "row",
@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 15,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#e9ecef",
   },
@@ -563,10 +563,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#4A4A4A",
   },
   submitButton: {
-    backgroundColor: "#e32f45",
+    backgroundColor: "#2E6A56",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
   },
   submitButtonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 5,
   },
   sectionSubtitle: {
@@ -598,9 +598,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   photoButton: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderWidth: 2,
-    borderColor: "#e32f45",
+    borderColor: "#2E6A56",
     borderStyle: "dashed",
     borderRadius: 12,
     padding: 40,
@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
   photoButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#e32f45",
+    color: "#2E6A56",
     marginTop: 8,
   },
   photoButtonSubtext: {
@@ -632,15 +632,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
   },
   descriptionInput: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 15,
     fontSize: 16,
-    color: "#333",
+    color: "#4A4A4A",
     minHeight: 120,
     borderWidth: 1,
     borderColor: "#e9ecef",
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
   },
   issueTypeButton: {
     width: "48%",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     alignItems: "center",
@@ -661,18 +661,18 @@ const styles = StyleSheet.create({
     borderColor: "#e9ecef",
   },
   issueTypeButtonSelected: {
-    backgroundColor: "#e32f45",
-    borderColor: "#e32f45",
+    backgroundColor: "#2E6A56",
+    borderColor: "#2E6A56",
   },
   issueTypeText: {
     fontSize: 14,
-    color: "#333",
+    color: "#4A4A4A",
     fontWeight: "600",
     marginTop: 8,
     textAlign: "center",
   },
   issueTypeTextSelected: {
-    color: "#fff",
+    color: "#FFFFFF",
   },
   locationOverlay: {
     position: "absolute",
@@ -685,13 +685,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   locationText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 12,
     marginLeft: 4,
     maxWidth: 200,
   },
   locationInfoContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     flexDirection: "row",
@@ -701,14 +701,14 @@ const styles = StyleSheet.create({
   },
   locationInfoText: {
     fontSize: 14,
-    color: "#333",
+    color: "#4A4A4A",
     marginLeft: 8,
     flex: 1,
   },
   anonymousContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
@@ -720,14 +720,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 2,
     borderColor: "#e9ecef",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
   },
   checkboxChecked: {
-    backgroundColor: "#e32f45",
-    borderColor: "#e32f45",
+    backgroundColor: "#2E6A56",
+    borderColor: "#2E6A56",
   },
   anonymousTextContainer: {
     flex: 1,
@@ -735,7 +735,7 @@ const styles = StyleSheet.create({
   anonymousTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: "#4A4A4A",
     marginBottom: 2,
   },
   anonymousSubtitle: {
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   mapOverlayText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 11,
     fontWeight: "500",
   },
@@ -794,7 +794,7 @@ const styles = StyleSheet.create({
   refreshLocationButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -803,7 +803,7 @@ const styles = StyleSheet.create({
   },
   refreshLocationText: {
     fontSize: 12,
-    color: "#e32f45",
+    color: "#2E6A56",
     fontWeight: "500",
     marginLeft: 4,
   },
@@ -811,19 +811,19 @@ const styles = StyleSheet.create({
     color: "#999",
   },
   getLocationButton: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: "#e32f45",
+    borderColor: "#2E6A56",
     borderStyle: "dashed",
   },
   getLocationButtonText: {
     fontSize: 16,
-    color: "#e32f45",
+    color: "#2E6A56",
     fontWeight: "600",
     marginLeft: 8,
   },
@@ -831,3 +831,8 @@ const styles = StyleSheet.create({
     color: "#999",
   },
 });
+
+
+
+
+

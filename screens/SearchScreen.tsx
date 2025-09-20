@@ -52,13 +52,13 @@ export default function SearchScreen() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "submitted":
-        return "#ffc107";
+        return "#5C9479";
       case "in-progress":
-        return "#007bff";
+        return "#2E6A56";
       case "resolved":
-        return "#28a745";
+        return "#2E6A56";
       default:
-        return "#6c757d";
+        return "#4A4A4A";
     }
   };
 
@@ -185,7 +185,7 @@ export default function SearchScreen() {
           <Ionicons
             name={report.hasUserUpvoted ? "heart" : "heart-outline"}
             size={18}
-            color={report.hasUserUpvoted ? "#fff" : "#e32f45"}
+            color={report.hasUserUpvoted ? "#FFFFFF" : "#2E6A56"}
           />
           <Text
             style={[
@@ -327,10 +327,10 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
   },
   header: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     paddingTop: 10,
     paddingHorizontal: 20,
     paddingBottom: 20,
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
   },
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#EFEFEF",
     borderRadius: 10,
     paddingHorizontal: 12,
     marginRight: 10,
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   searchButton: {
-    backgroundColor: "#e32f45",
+    backgroundColor: "#2E6A56",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 10,
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
   },
   searchButtonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontWeight: "600",
     fontSize: 16,
   },
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   exampleContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 8,
     borderWidth: 1,
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: "#e0e0e0",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
   },
   clearResultsText: {
     fontSize: 12,
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   reportCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     marginBottom: 15,
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
   reportId: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#e32f45",
+    color: "#2E6A56",
     marginBottom: 2,
   },
   reportTitle: {
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 10,
-    color: "#fff",
+    color: "#FFFFFF",
     fontWeight: "600",
     textAlign: "center",
   },
@@ -557,20 +557,20 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#e32f45",
-    backgroundColor: "#fff",
+    borderColor: "#2E6A56",
+    backgroundColor: "#FFFFFF",
   },
   upvoteButtonActive: {
-    backgroundColor: "#e32f45",
+    backgroundColor: "#2E6A56",
   },
   upvoteCount: {
     fontSize: 12,
-    color: "#e32f45",
+    color: "#2E6A56",
     fontWeight: "500",
     marginLeft: 4,
   },
   upvoteCountActive: {
-    color: "#fff",
+    color: "#FFFFFF",
   },
   viewDetailsContainer: {
     flexDirection: "row",
@@ -582,3 +582,11 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
 });
+
+
+
+
+
+
+
+

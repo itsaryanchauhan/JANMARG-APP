@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
+import { mockPersonalReports } from "../data/mock/personalReports";
 
 export interface Report {
   id: string;
@@ -41,7 +42,7 @@ interface ReportsContextType {
 const ReportsContext = createContext<ReportsContextType | undefined>(undefined);
 
 export function ReportsProvider({ children }: { children: ReactNode }) {
-  const [reports, setReports] = useState<Report[]>([]);
+  const [reports, setReports] = useState<Report[]>(mockPersonalReports);
 
   const addReport = (
     reportData: Omit<Report, "id" | "timestamp" | "status" | "timeline"> & {

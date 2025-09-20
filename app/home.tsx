@@ -2,8 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Tabs from "../navigation/tabs";
 import { LanguageProvider } from "../context/LanguageContext";
+import Tabs from "../navigation/tabs";
 
 export default function HomeWithTabs() {
   const insets = useSafeAreaInsets();
