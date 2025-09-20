@@ -17,6 +17,7 @@ export interface CommunityReport {
     | "encroachment"
     | "garbage-issue";
   imageUri?: string;
+  imageSource?: any;
   location: {
     latitude: number;
     longitude: number;

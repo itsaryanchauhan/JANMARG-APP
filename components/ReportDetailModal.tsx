@@ -295,11 +295,11 @@ export default function ReportDetailModal({
           </View>
 
           {/* Image (if available) */}
-          {report.imageUri && (
+          {report.imageSource && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Photo Evidence</Text>
               <Image
-                source={{ uri: report.imageUri }}
+                source={report.imageSource}
                 style={styles.reportImage}
               />
             </View>

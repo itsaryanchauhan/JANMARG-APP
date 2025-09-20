@@ -7,6 +7,7 @@ export interface Report {
   description: string;
   type: "pothole" | "broken-streetlight" | "garbage" | "overgrown-weed";
   imageUri?: string;
+  imageSource?: any;
   location?: {
     latitude: number;
     longitude: number;

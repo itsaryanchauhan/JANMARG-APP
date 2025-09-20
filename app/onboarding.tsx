@@ -101,7 +101,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/react-logo.png")}
+            source={require("../assets/images/onboarding/onboarding1.png")}
             style={styles.img}
           />
           <Text
@@ -129,7 +129,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/react-logo.png")}
+            source={require("../assets/images/onboarding/onboarding2.png")}
             style={styles.img}
           />
           <Text
@@ -157,7 +157,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/icon.png")}
+            source={require("../assets/images/onboarding/onboarding3.png")}
             style={styles.img}
           />
           <Text
@@ -185,7 +185,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/splash-icon.png")}
+            source={require("../assets/images/onboarding/onboarding4.png")}
             style={styles.img}
           />
           <Text

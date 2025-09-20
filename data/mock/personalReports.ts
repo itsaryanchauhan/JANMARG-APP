@@ -8,7 +8,7 @@ export const mockPersonalReports: Report[] = [
     description:
       "The streetlight near the bus stop on Main Road has been flickering for weeks and finally went out completely. This creates a safety hazard for pedestrians, especially during evening hours.",
     type: "broken-streetlight",
-    imageUri: "/placeholder.svg",
+    imageSource: require("../../assets/images/mock_image/broken_streetlight.jpg"),
     location: {
       latitude: 28.6139,
       longitude: 77.209,
@@ -33,7 +33,7 @@ export const mockPersonalReports: Report[] = [
     description:
       "Garbage collection has been skipped for the past 3 days in residential area. The bins are overflowing and creating unhygienic conditions.",
     type: "garbage",
-    imageUri: "/placeholder.svg",
+    imageSource: require("../../assets/images/mock_image/garbage.png"),
     location: {
       latitude: 23.7958,
       longitude: 86.1511,
