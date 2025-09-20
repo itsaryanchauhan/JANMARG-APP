@@ -226,6 +226,7 @@ export default function SearchScreen() {
           <TextInput
             style={styles.searchInput}
             placeholder="Enter report ID (e.g., CR001) or keywords..."
+            placeholderTextColor="#999"
             value={searchQuery}
             onChangeText={setSearchQuery}
             onSubmitEditing={handleSearch}
@@ -372,7 +373,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 44,
     fontSize: 16,
-    color: "#333",
+    color: "#000000",
   },
   clearButton: {
     marginLeft: 8,
@@ -464,7 +465,7 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   resultsList: {
-    paddingBottom: 20,
+    paddingBottom: 110,
   },
   reportCard: {
     backgroundColor: "#FFFFFF",

@@ -57,6 +57,7 @@ export default function LoginScreen() {
               placeholder="Password"
               placeholderTextColor={"gray"}
               secureTextEntry
+              style={{ color: "black" }}
             />
           </Animated.View>
 

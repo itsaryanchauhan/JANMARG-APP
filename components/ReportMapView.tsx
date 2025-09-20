@@ -50,13 +50,22 @@ const ReportMapView: React.FC<ReportMapViewProps> = ({
     }]).addTo(map);
             marker.bindPopup('${title || location.address}');
             
-            // Disable interactions to match the original behavior
+            // Disable all interactions including 2-finger zoom
             map.dragging.disable();
             map.touchZoom.disable();
             map.doubleClickZoom.disable();
             map.scrollWheelZoom.disable();
             map.boxZoom.disable();
             map.keyboard.disable();
+            
+            // Additional restrictions for touch devices
+            map.gestureHandling = false;
+            if (map.tap) map.tap.disable();
+            
+            // Prevent context menu on long press
+            map.getContainer().addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
         </script>
     </body>
     </html>
@@ -72,6 +81,10 @@ const ReportMapView: React.FC<ReportMapViewProps> = ({
         scalesPageToFit={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        pinchGestureEnabled={false}
+        allowsInlineMediaPlayback={false}
+        mediaPlaybackRequiresUserAction={true}
       />
     </View>
   );

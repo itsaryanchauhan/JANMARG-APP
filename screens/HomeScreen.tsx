@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FlatList,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,6 +35,7 @@ export default function HomeScreen() {
   const [showReportDetail, setShowReportDetail] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showStatusFilter, setShowStatusFilter] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
 
   const allReports = getReportsForArea(selectedArea).filter(
     (report) => report.status !== "resolved"
@@ -154,6 +156,16 @@ export default function HomeScreen() {
         {report.description}
       </Text>
 
+      {report.imageUri && (
+        <View style={styles.reportImageContainer}>
+          <Image
+            source={{ uri: report.imageUri }}
+            style={styles.reportImage}
+            resizeMode="cover"
+          />
+        </View>
+      )}
+
       <View style={styles.reportFooter}>
         <TouchableOpacity
           style={[
@@ -236,6 +248,13 @@ export default function HomeScreen() {
                   onPress={() => {
                     setSelectedArea(area);
                     setShowAreaSelector(false);
+                    // Auto-scroll to top when region changes
+                    setTimeout(() => {
+                      flatListRef.current?.scrollToOffset({
+                        offset: 0,
+                        animated: true,
+                      });
+                    }, 100);
                   }}
                 >
                   <Text
@@ -368,6 +387,7 @@ export default function HomeScreen() {
           </View>
         ) : (
           <FlatList
+            ref={flatListRef}
             data={reportsInArea}
             renderItem={renderReportCard}
             keyExtractor={(item) => item.id}
@@ -565,7 +585,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   reportsList: {
-    paddingBottom: 20,
+    paddingBottom: 110,
   },
   reportCard: {
     backgroundColor: "#FFFFFF",
@@ -730,5 +750,16 @@ const styles = StyleSheet.create({
   },
   activeFilterChipText: {
     color: "#FFFFFF",
+  },
+  reportImageContainer: {
+    marginTop: 12,
+    marginBottom: 8,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  reportImage: {
+    width: "100%",
+    height: 120,
+    borderRadius: 8,
   },
 });
