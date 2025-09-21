@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   reportsList: {
-    paddingBottom: 110,
+    paddingBottom: 20,
   },
   reportCard: {
     backgroundColor: "#FFFFFF",

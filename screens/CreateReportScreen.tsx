@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    paddingBottom: 120,
+    paddingBottom: 20,
   },
   header: {
     alignItems: "center",
@@ -152,6 +152,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-
-

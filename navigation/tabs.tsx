@@ -29,7 +29,7 @@ const Tabs = () => {
   const isTablet = width >= 768;
   const isSmallPhone = width <= 375;
 
-  // Add extra margin based on safe area and device type
+  // // Add extra margin based on safe area and device type
   const baseMargin = isTablet ? 35 : isSmallPhone ? 25 : 30;
   const safeMargin = Math.max(baseMargin, insets.left + 15, insets.right + 15);
 
@@ -40,25 +40,25 @@ const Tabs = () => {
   const getResponsiveValue = () => {
     if (isTablet) {
       return {
-        navbarHeight: 80,
-        fontSize: 12,
-        iconSize: 24,
+        navbarHeight: 85,
+        fontSize: 13,
+        iconSize: 26,
         buttonSize: 65,
         margin: finalMargin, // Use safe area aware margin
       };
     } else if (isSmallPhone) {
       return {
-        navbarHeight: 70,
-        fontSize: 9,
-        iconSize: 20,
+        navbarHeight: 80,
+        fontSize: 11,
+        iconSize: 22,
         buttonSize: 50,
         margin: finalMargin, // Use safe area aware margin
       };
     } else {
       return {
-        navbarHeight: 75,
-        fontSize: 10,
-        iconSize: 22,
+        navbarHeight: 82,
+        fontSize: 12,
+        iconSize: 24,
         buttonSize: 55,
         margin: finalMargin, // Use safe area aware margin
       };
@@ -71,15 +71,17 @@ const Tabs = () => {
   const dynamicStyles = StyleSheet.create({
     tabBarStyle: {
       position: "absolute",
-      bottom: 15,
-      left: responsive.margin,
-      right: responsive.margin,
+      bottom: 0,
+      left: 0,
+      right: 0,
       backgroundColor: "#FFFFFF",
-      borderRadius: 20,
-      height: responsive.navbarHeight,
-      paddingBottom: isTablet ? 15 : 10,
+      borderRadius: 0,
+      height: responsive.navbarHeight + insets.bottom,
+      paddingBottom: insets.bottom + (isTablet ? 10 : 5),
       paddingTop: isTablet ? 15 : 10,
-      marginHorizontal: 0, // Ensure no additional margin
+      marginHorizontal: 0,
+      borderTopWidth: 1,
+      borderTopColor: "#e5e7eb",
       ...styles.shadow,
     },
     customButton: {
@@ -95,15 +97,15 @@ const Tabs = () => {
     tabItem: {
       alignItems: "center",
       justifyContent: "center",
-      minHeight: responsive.navbarHeight - 20,
-      paddingHorizontal: isSmallPhone ? 2 : 4,
+      height: responsive.navbarHeight - 10,
+      paddingHorizontal: isSmallPhone ? 4 : 2,
       flex: 1,
       maxWidth: width / 5, // Ensure equal distribution among 5 tabs
-      paddingVertical: 5, // Add vertical padding for better spacing
+      paddingVertical: 2,
     },
     tabLabel: {
       fontSize: responsive.fontSize,
-      marginTop: isSmallPhone ? 1 : 2, // Reduced marginTop for Android phones
+      marginTop: isSmallPhone ? 1 : 8, // Reduced spacing to make text appear lower
       fontWeight: "600",
       textAlign: "center",
       flexShrink: 0, // Prevent text shrinking
@@ -116,7 +118,7 @@ const Tabs = () => {
     <TouchableOpacity
       style={[
         {
-          top: -25,
+          top: -15,
           justifyContent: "center",
           alignItems: "center",
         },
@@ -284,11 +286,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: -2,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });
 
