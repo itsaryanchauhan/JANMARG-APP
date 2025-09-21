@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useRef } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -9,6 +11,16 @@ import {
 } from "react-native";
 
 export default function ProfileScreen() {
+  const bottomTabBarHeight = useBottomTabBarHeight();
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Scroll to top when the screen comes into focus
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, [])
+  );
+
   const profileOptions = [
     {
       icon: "person-outline",
@@ -43,7 +55,15 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={styles.container}
+      contentContainerStyle={{
+        paddingBottom: bottomTabBarHeight + 20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+      }}
+    >
       {/* Profile Header */}
       <View style={styles.profileHeader}>
         <View style={styles.avatarContainer}>

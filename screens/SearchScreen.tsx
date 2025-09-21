@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -24,6 +26,19 @@ export default function SearchScreen() {
   );
   const [showReportDetail, setShowReportDetail] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+
+  const bottomTabBarHeight = useBottomTabBarHeight();
+  const flatListRef = useRef<FlatList>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Scroll to top when the screen comes into focus
+      flatListRef.current?.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+    }, [])
+  );
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -303,11 +318,12 @@ export default function SearchScreen() {
             </View>
 
             <FlatList
+              ref={flatListRef}
               data={searchResults}
               renderItem={renderSearchResult}
               keyExtractor={(item) => item.id}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.resultsList}
+              contentContainerStyle={{ paddingBottom: bottomTabBarHeight + 20 }}
             />
           </>
         )}

@@ -1,4 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useFocusEffect } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import {
   FlatList,
@@ -36,6 +38,18 @@ export default function HomeScreen() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showStatusFilter, setShowStatusFilter] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+
+  const bottomTabBarHeight = useBottomTabBarHeight();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Scroll to top when the screen comes into focus
+      flatListRef.current?.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+    }, [])
+  );
 
   const allReports = getReportsForArea(selectedArea).filter(
     (report) => report.status !== "resolved"
@@ -199,7 +213,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* District Selector */}
+      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <Text style={styles.welcomeText}>{t("welcome")}</Text>
@@ -226,91 +240,7 @@ export default function HomeScreen() {
             color="#666"
           />
         </TouchableOpacity>
-
-        {/* District Dropdown */}
-        {showAreaSelector && (
-          <View style={styles.areaDropdown}>
-            <FlatList
-              data={areas}
-              keyExtractor={(item) => item}
-              style={styles.areaScrollView}
-              showsVerticalScrollIndicator={true}
-              keyboardShouldPersistTaps="handled"
-              bounces={true}
-              contentContainerStyle={{ paddingBottom: 10 }}
-              renderItem={({ item: area }) => (
-                <TouchableOpacity
-                  key={area}
-                  style={[
-                    styles.areaItem,
-                    selectedArea === area && styles.areaItemSelected,
-                  ]}
-                  onPress={() => {
-                    setSelectedArea(area);
-                    setShowAreaSelector(false);
-                    // Auto-scroll to top when region changes
-                    setTimeout(() => {
-                      flatListRef.current?.scrollToOffset({
-                        offset: 0,
-                        animated: true,
-                      });
-                    }, 100);
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.areaItemText,
-                      selectedArea === area && styles.areaItemTextSelected,
-                    ]}
-                  >
-                    {area}
-                  </Text>
-                  {selectedArea === area && (
-                    <Ionicons name="checkmark" size={20} color="#2E6A56" />
-                  )}
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        )}
-
-        {/* Language Dropdown */}
-        {showLanguageSelector && (
-          <View style={styles.languageDropdown}>
-            <ScrollView
-              style={styles.languageScrollView}
-              showsVerticalScrollIndicator={false}
-            >
-              {availableLanguages.map((language) => (
-                <TouchableOpacity
-                  key={language.code}
-                  style={[
-                    styles.languageItem,
-                    currentLanguage.code === language.code &&
-                      styles.languageItemSelected,
-                  ]}
-                  onPress={() => {
-                    setLanguage(language);
-                    setShowLanguageSelector(false);
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.languageItemText,
-                      currentLanguage.code === language.code &&
-                        styles.languageItemTextSelected,
-                    ]}
-                  >
-                    {language.name}
-                  </Text>
-                  {currentLanguage.code === language.code && (
-                    <Ionicons name="checkmark" size={20} color="#2E6A56" />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        {/* DROPDOWNS HAVE BEEN MOVED FROM HERE */}
       </View>
 
       {/* Reports List */}
@@ -392,7 +322,7 @@ export default function HomeScreen() {
             renderItem={renderReportCard}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.reportsList}
+            contentContainerStyle={{ paddingBottom: bottomTabBarHeight + 20 }}
           />
         )}
       </View>
@@ -404,6 +334,100 @@ export default function HomeScreen() {
         onClose={() => setShowReportDetail(false)}
         onUpvote={handleUpvote}
       />
+
+      {/* ===== FIX STARTS HERE ===== */}
+      {/* Dropdowns are now rendered here, as overlays at the root level */}
+
+      {/* District Dropdown */}
+      {showAreaSelector && (
+        <>
+          {/* Backdrop to capture touches */}
+          <TouchableOpacity
+            style={styles.dropdownBackdrop}
+            onPress={() => setShowAreaSelector(false)}
+            activeOpacity={1}
+          />
+          <View style={styles.areaDropdown} pointerEvents="auto">
+            <ScrollView
+              showsVerticalScrollIndicator={true}
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled={true}
+            >
+              {areas.map((area) => (
+                <TouchableOpacity
+                  key={area}
+                  style={[
+                    styles.areaItem,
+                    selectedArea === area && styles.areaItemSelected,
+                  ]}
+                  onPress={() => {
+                    setSelectedArea(area);
+                    setShowAreaSelector(false);
+                    // Auto-scroll to top when region changes
+                    setTimeout(() => {
+                      flatListRef.current?.scrollToOffset({
+                        offset: 0,
+                        animated: true,
+                      });
+                    }, 100);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.areaItemText,
+                      selectedArea === area && styles.areaItemTextSelected,
+                    ]}
+                  >
+                    {area}
+                  </Text>
+                  {selectedArea === area && (
+                    <Ionicons name="checkmark" size={20} color="#2E6A56" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </>
+      )}
+
+      {/* Language Dropdown */}
+      {showLanguageSelector && (
+        <View style={styles.languageDropdown}>
+          <ScrollView
+            style={styles.languageScrollView}
+            showsVerticalScrollIndicator={false}
+          >
+            {availableLanguages.map((language) => (
+              <TouchableOpacity
+                key={language.code}
+                style={[
+                  styles.languageItem,
+                  currentLanguage.code === language.code &&
+                    styles.languageItemSelected,
+                ]}
+                onPress={() => {
+                  setLanguage(language);
+                  setShowLanguageSelector(false);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.languageItemText,
+                    currentLanguage.code === language.code &&
+                      styles.languageItemTextSelected,
+                  ]}
+                >
+                  {language.name}
+                </Text>
+                {currentLanguage.code === language.code && (
+                  <Ionicons name="checkmark" size={20} color="#2E6A56" />
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+      {/* ===== FIX ENDS HERE ===== */}
     </View>
   );
 }
@@ -413,6 +437,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#EFEFEF",
   },
+  dropdownBackdrop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "transparent",
+    zIndex: 1999, // Z-index should be high, but lower than the dropdown itself
+  },
   header: {
     backgroundColor: "#FFFFFF",
     paddingTop: 10,
@@ -420,8 +453,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
-    zIndex: 1000,
-    overflow: "visible",
+    zIndex: 1, // Lower zIndex for header as overlays are handled separately
   },
   headerTop: {
     flexDirection: "row",
@@ -471,33 +503,29 @@ const styles = StyleSheet.create({
   },
   areaDropdown: {
     position: "absolute",
-    top: 85,
+    top: 140, // Adjusted this value to be more accurate relative to the screen top
     left: 20,
     right: 20,
     backgroundColor: "#FFFFFF",
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
-    maxHeight: 400,
-    zIndex: 2000,
+    borderColor: "#e9ecef",
+    maxHeight: 300, // Use maxHeight instead of height to be more flexible
+    zIndex: 2000, // Must be higher than backdrop
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 10,
-    overflow: "hidden",
-  },
-  areaScrollView: {
-    maxHeight: 380,
-    backgroundColor: "#FFFFFF",
   },
   areaItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#f1f3f4",
   },
   areaItemSelected: {
     backgroundColor: "#EFEFEF",
@@ -512,7 +540,7 @@ const styles = StyleSheet.create({
   },
   languageDropdown: {
     position: "absolute",
-    top: 85,
+    top: 60, // Adjusted this value
     right: 20,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
@@ -520,7 +548,7 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     maxHeight: 150,
     width: 160,
-    zIndex: 1002,
+    zIndex: 2000, // Give it a high zIndex as well
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -533,6 +561,7 @@ const styles = StyleSheet.create({
   languageItem: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
@@ -543,7 +572,6 @@ const styles = StyleSheet.create({
   languageItemText: {
     fontSize: 14,
     color: "#4A4A4A",
-    marginLeft: 8,
     flex: 1,
   },
   languageItemTextSelected: {
@@ -583,9 +611,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginLeft: 4,
-  },
-  reportsList: {
-    paddingBottom: 20,
+    marginRight: 4,
   },
   reportCard: {
     backgroundColor: "#FFFFFF",
@@ -631,11 +657,12 @@ const styles = StyleSheet.create({
   },
   reportMeta: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
   },
   reportTime: {
     fontSize: 12,
     color: "#999",
+    flex: 1,
   },
   reportAuthor: {
     fontSize: 12,
@@ -663,6 +690,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 8,
   },
   upvoteButton: {
     flexDirection: "row",
@@ -699,7 +727,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 60,
+    paddingBottom: 50,
   },
   emptyTitle: {
     fontSize: 18,
@@ -713,25 +741,13 @@ const styles = StyleSheet.create({
     color: "#666",
     textAlign: "center",
     lineHeight: 20,
+    paddingHorizontal: 20,
   },
   filterOptionsContainer: {
-    backgroundColor: "#FFFFFF",
-    marginHorizontal: 20,
-    marginBottom: 16,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 3,
+    marginBottom: 15,
   },
   filterChip: {
-    backgroundColor: "#EFEFEF",
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -752,14 +768,13 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   reportImageContainer: {
-    marginTop: 12,
+    marginTop: 4,
     marginBottom: 8,
     borderRadius: 8,
     overflow: "hidden",
   },
   reportImage: {
     width: "100%",
-    height: 120,
-    borderRadius: 8,
+    height: 150,
   },
 });

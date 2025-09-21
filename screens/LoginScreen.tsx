@@ -1,10 +1,30 @@
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    // Simple hardcoded login for demo
+    if (email === "user@example.com" && password === "abc123") {
+      // Navigate to main app
+      navigation.navigate("Home" as never);
+    } else {
+      Alert.alert("Login Failed", "Invalid email or password");
+    }
+  };
 
   return (
     <View className="bg-white h-full w-full">
@@ -46,7 +66,13 @@ export default function LoginScreen() {
             entering={FadeInDown.delay(200).duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Email" placeholderTextColor={"gray"} />
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor={"gray"}
+              value={email}
+              onChangeText={setEmail}
+              style={{ color: "black" }}
+            />
           </Animated.View>
 
           <Animated.View
@@ -57,6 +83,8 @@ export default function LoginScreen() {
               placeholder="Password"
               placeholderTextColor={"gray"}
               secureTextEntry
+              value={password}
+              onChangeText={setPassword}
               style={{ color: "black" }}
             />
           </Animated.View>
@@ -65,7 +93,10 @@ export default function LoginScreen() {
             entering={FadeInDown.delay(600).duration(1000).springify()}
             className="w-full"
           >
-            <TouchableOpacity className="w-full bg-sky-400 p-3 rounded-2xl mb-3">
+            <TouchableOpacity
+              className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
+              onPress={handleLogin}
+            >
               <Text className="text-xl font-bold text-white text-center">
                 Login
               </Text>

@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
+  Alert,
   Image,
   Modal,
   ScrollView,
@@ -133,7 +134,11 @@ export default function ReportDetailModal({
           <View style={styles.placeholder} />
         </View>
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
           {/* Report Header */}
           <View style={styles.reportHeader}>
             <View
@@ -332,6 +337,36 @@ export default function ReportDetailModal({
               </Text>
             </TouchableOpacity>
           </View>
+
+          {/* Report Spam Section */}
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={styles.spamButton}
+              onPress={() => {
+                // For now, just show an alert
+                Alert.alert(
+                  "Report as Spam",
+                  "Are you sure you want to report this report as spam?",
+                  [
+                    { text: "Cancel", style: "cancel" },
+                    {
+                      text: "Report",
+                      style: "destructive",
+                      onPress: () => {
+                        Alert.alert(
+                          "Thank you",
+                          "Your report has been submitted."
+                        );
+                      },
+                    },
+                  ]
+                );
+              }}
+            >
+              <Ionicons name="flag-outline" size={24} color="#FF6B6B" />
+              <Text style={styles.spamText}>Report as Spam</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     </Modal>
@@ -342,6 +377,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#EFEFEF",
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
     flexDirection: "row",
@@ -369,8 +407,8 @@ const styles = StyleSheet.create({
     width: 40,
   },
   content: {
-    flex: 1,
     padding: 20,
+    paddingBottom: 40,
   },
   reportHeader: {
     flexDirection: "row",
@@ -652,5 +690,21 @@ const styles = StyleSheet.create({
   mapContainer: {
     marginTop: 12,
     height: 200,
+  },
+  spamButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#FF6B6B",
+    backgroundColor: "#FFF5F5",
+  },
+  spamText: {
+    fontSize: 16,
+    color: "#FF6B6B",
+    fontWeight: "500",
+    marginLeft: 8,
   },
 });

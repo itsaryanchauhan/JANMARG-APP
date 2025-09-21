@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
 import {
   Image,
   Platform,
@@ -19,6 +21,16 @@ export default function MyReportsScreen() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showReportDetail, setShowReportDetail] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const bottomTabBarHeight = useBottomTabBarHeight();
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Scroll to top when the screen comes into focus
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, [])
+  );
 
   // Sort reports: submitted -> in-progress -> resolved
   const sortedReports = [...reports].sort((a, b) => {
@@ -106,7 +118,15 @@ export default function MyReportsScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={styles.container}
+      contentContainerStyle={{
+        paddingBottom: bottomTabBarHeight + 20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+      }}
+    >
       <View style={styles.header}>
         <Ionicons name="document-text" size={32} color="#2E6A56" />
         <Text style={styles.title}>My Reports</Text>

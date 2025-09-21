@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React from "react";
 import {
   ScrollView,
@@ -10,8 +11,17 @@ import {
 } from "react-native";
 
 export default function CreateReportScreen() {
+  const bottomTabBarHeight = useBottomTabBarHeight();
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{
+        paddingBottom: bottomTabBarHeight + 20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+      }}
+    >
       <View style={styles.header}>
         <Ionicons name="document-text" size={32} color="#2E6A56" />
         <Text style={styles.title}>Create Report</Text>
