@@ -156,10 +156,10 @@ export default function HomeScreen() {
         {report.description}
       </Text>
 
-      {report.imageSource && (
+      {(report.imageSource || report.imageUri) && (
         <View style={styles.reportImageContainer}>
           <Image
-            source={report.imageSource}
+            source={report.imageSource || { uri: report.imageUri }}
             style={styles.reportImage}
             resizeMode="cover"
           />

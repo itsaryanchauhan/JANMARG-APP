@@ -264,9 +264,9 @@ export default function MyReportsScreen() {
                     </Text>
                   </View>
                 </View>
-                {report.imageSource && (
+                {(report.imageSource || report.imageUri) && (
                   <Image
-                    source={report.imageSource}
+                    source={report.imageSource || { uri: report.imageUri }}
                     style={styles.reportImage}
                   />
                 )}

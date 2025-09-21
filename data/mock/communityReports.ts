@@ -39,7 +39,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Large pothole on National Highway 32 near Chatra bus stand causing severe vehicle damage. Water logging during monsoon makes it extremely hazardous for two-wheelers.",
     type: "pothole",
-    imageSource: require("../../assets/images/mock_image/deep_pothole.png"),
+    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
     location: {
       latitude: 24.2084,
       longitude: 84.8717,
@@ -84,7 +84,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Garbage has not been collected from Baba Adam Market area in Deoghar for the past 4 days. With the temple town receiving many visitors, this creates serious hygiene concerns.",
     type: "garbage-issue",
-    imageSource: require("../../assets/images/mock_image/garbage.png"),
+    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
     location: {
       latitude: 24.4823,
       longitude: 86.6937,
@@ -205,7 +205,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Cars are constantly parked in front of the emergency exit of Green Valley Public Park blocking access for ambulances and fire trucks. This violates safety norms and puts lives at risk.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/traffic_congestion.png"),
+    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
     location: {
       latitude: 28.650834,
       longitude: 77.315245,
@@ -492,7 +492,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "No water supply in Park View residential area for 3 consecutive days. Water tankers requested but not yet arrived. Residents facing severe hardship.",
     type: "water-issue",
-    imageSource: require("../../assets/images/mock_image/broken_water_pipeline.jpeg"),
+    imageSource: require("../../assets/images/mock_image/overflowing_drain.jpg"),
     location: {
       latitude: 28.535412,
       longitude: 77.250634,
@@ -953,7 +953,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Small bridge over Nalkari river on Chatra-Gaya road has developed cracks. Monsoon damage visible with loose concrete blocks. Heavy vehicle movement restricted.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/bridge_damage.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
     location: {
       latitude: 24.2145,
       longitude: 84.8695,
@@ -1065,7 +1065,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Major water supply pipeline burst in Pratappur area of Chatra. Water scarcity affecting 200+ households. Emergency repair needed before summer season.",
     type: "water-issue",
-    imageSource: require("../../assets/images/mock_image/broken_water_pipeline.jpeg"),
+    imageSource: require("../../assets/images/mock_image/overflowing_drain.jpg"),
     location: {
       latitude: 24.2156,
       longitude: 84.8789,
