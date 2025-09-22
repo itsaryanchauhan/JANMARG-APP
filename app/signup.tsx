@@ -1,6 +1,9 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -9,10 +12,60 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { AuthService } from "../services/authService";
 import { logger } from "../utils/logger";
 
 export default function SignupScreen() {
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   logger.info("SignupScreen rendered");
+
+  const handleSignup = async () => {
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters long");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      logger.info("Signup attempt", { email, username });
+
+      const result = await AuthService.signup({
+        username: username.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+      });
+
+      logger.info("Signup successful", { userId: result.user.id });
+      Alert.alert(
+        "Success",
+        "Account created successfully! Please check your email to verify your account.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.push("./login"),
+          },
+        ]
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Signup failed";
+      logger.error("Signup failed", error);
+      Alert.alert("Signup Failed", errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -57,6 +110,9 @@ export default function SignupScreen() {
               placeholder="Username"
               placeholderTextColor={"gray"}
               style={styles.input}
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="words"
             />
           </Animated.View>
 
@@ -68,6 +124,10 @@ export default function SignupScreen() {
               placeholder="Email"
               placeholderTextColor={"gray"}
               style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
           </Animated.View>
 
@@ -80,6 +140,8 @@ export default function SignupScreen() {
               placeholderTextColor={"gray"}
               secureTextEntry
               style={styles.input}
+              value={password}
+              onChangeText={setPassword}
             />
           </Animated.View>
 
@@ -87,8 +149,16 @@ export default function SignupScreen() {
             entering={FadeInDown.delay(800).duration(1000).springify()}
             style={styles.buttonContainer}
           >
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>SignUp</Text>
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={handleSignup}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.buttonText}>SignUp</Text>
+              )}
             </TouchableOpacity>
           </Animated.View>
 
@@ -174,6 +244,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 16,
     marginBottom: 12,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
     fontSize: 18,

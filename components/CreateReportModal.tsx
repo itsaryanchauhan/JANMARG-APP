@@ -25,7 +25,7 @@ interface CreateReportModalProps {
   onClose: () => void;
 }
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const issueTypes = [
   { value: "pothole", label: "Pothole", icon: "car-outline" },
@@ -365,7 +365,7 @@ export default function CreateReportModal({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Issue Type</Text>
             <Text style={styles.sectionSubtitle}>
-              Select the type of issue you're reporting
+              Select the type of issue you&apos;re reporting
             </Text>
 
             <View style={styles.issueTypeGrid}>
@@ -406,8 +406,8 @@ export default function CreateReportModal({
               District Selection (Optional)
             </Text>
             <Text style={styles.sectionSubtitle}>
-              Select your district in Jharkhand if you know it, otherwise we'll
-              detect it automatically
+              Select your district in Jharkhand if you know it, otherwise
+              we&apos;ll detect it automatically
             </Text>
 
             <TouchableOpacity
@@ -511,7 +511,7 @@ export default function CreateReportModal({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Description</Text>
             <Text style={styles.sectionSubtitle}>
-              Describe the issue you're reporting
+              Describe the issue you&apos;re reporting
             </Text>
 
             <TextInput

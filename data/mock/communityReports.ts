@@ -1,4 +1,4 @@
-import { CommunityReport } from "../../context/CommunityReportsContext";
+import { CommunityReport } from "../../types/api";
 
 // Mock data based on the JSON structure from message.txt
 export const mockCommunityReports: CommunityReport[] = [

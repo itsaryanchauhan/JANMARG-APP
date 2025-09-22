@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { CommunityReport } from "../context/CommunityReportsContext";
+import { CommunityReport } from "../types/api";
 import ReportMapView from "./ReportMapView";
 
 interface ReportDetailModalProps {
@@ -199,29 +199,40 @@ export default function ReportDetailModal({
               <Ionicons name="location" size={20} color="#2E6A56" />
               <View style={styles.locationInfo}>
                 <Text style={styles.locationAddress}>
-                  {report.location.address}
+                  {report.location?.address || "Address not available"}
                 </Text>
-                <Text style={styles.locationArea}>{report.location.area}</Text>
-                <Text style={styles.coordinates}>
-                  {report.location.latitude.toFixed(6)},{" "}
-                  {report.location.longitude.toFixed(6)}
+                <Text style={styles.locationArea}>
+                  {report.location?.area || "Area not specified"}
                 </Text>
+                {report.location && (
+                  <Text style={styles.coordinates}>
+                    {report.location.latitude.toFixed(6)},{" "}
+                    {report.location.longitude.toFixed(6)}
+                  </Text>
+                )}
               </View>
             </View>
 
             {/* Map View */}
-            <ReportMapView
-              location={report.location}
-              title={report.title}
-              style={styles.mapContainer}
-            />
+            {report.location && (
+              <ReportMapView
+                location={{
+                  latitude: report.location.latitude,
+                  longitude: report.location.longitude,
+                  address: report.location.address || "Address not available",
+                  area: report.location.area || "Area not specified",
+                }}
+                title={report.title}
+                style={styles.mapContainer}
+              />
+            )}
           </View>
 
           {/* Timeline */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Report Timeline</Text>
             <View style={styles.timelineContainer}>
-              {report.timeline.map((entry, index) => {
+              {report.timeline.map((entry: any, index: number) => {
                 const isLast = index === report.timeline.length - 1;
                 const isCurrent = entry.status === report.status;
 

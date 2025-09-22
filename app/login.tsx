@@ -2,6 +2,7 @@ import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Image,
   StyleSheet,
@@ -11,33 +12,41 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { AuthService } from "../services/authService";
 import { logger } from "../utils/logger";
 
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const VALID_EMAIL = "abc@gmail.com";
-  const VALID_PASSWORD = "abc123";
+  const [loading, setLoading] = useState(false);
 
   logger.info("LoginScreen rendered");
 
-  const handleLogin = () => {
-    logger.info("Login attempt", { email: email ? "provided" : "empty" });
-    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      logger.info("Login successful, navigating to onboarding");
-      router.push("./onboarding");
-    } else {
-      logger.warn("Login failed: invalid credentials", {
-        email,
-        passwordProvided: !!password,
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Error", "Please enter both email and password");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      logger.info("Login attempt", { email: email ? "provided" : "empty" });
+
+      const result = await AuthService.login({
+        email: email.trim().toLowerCase(),
+        password,
       });
-      Alert.alert(
-        "Login Failed",
-        "Invalid credentials. Please use the test credentials shown below.",
-        [{ text: "OK" }]
-      );
+
+      logger.info("Login successful", { userId: result.user.id });
+      router.push("./onboarding");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Login failed";
+      logger.error("Login failed", error);
+      Alert.alert("Login Failed", errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -76,16 +85,6 @@ export default function LoginScreen() {
 
         {/* form */}
         <View style={styles.formContainer}>
-          {/* Test Credentials Display */}
-          <Animated.View
-            entering={FadeInDown.delay(100).duration(1000).springify()}
-            style={styles.credentialsContainer}
-          >
-            <Text style={styles.credentialsTitle}>Test Credentials:</Text>
-            <Text style={styles.credentialsText}>Email: abc@gmail.com</Text>
-            <Text style={styles.credentialsText}>Password: abc123</Text>
-          </Animated.View>
-
           <Animated.View
             entering={FadeInDown.delay(200).duration(1000).springify()}
             style={styles.inputContainer}
@@ -119,8 +118,16 @@ export default function LoginScreen() {
             entering={FadeInDown.delay(600).duration(1000).springify()}
             style={styles.buttonContainer}
           >
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Login</Text>
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Login</Text>
+              )}
             </TouchableOpacity>
           </Animated.View>
 
@@ -128,7 +135,7 @@ export default function LoginScreen() {
             entering={FadeInDown.delay(800).duration(1000).springify()}
             style={styles.linkContainer}
           >
-            <Text>Don't have an account? </Text>
+            <Text>Don&apos;t have an account? </Text>
             <Link href="./signup" asChild>
               <TouchableOpacity>
                 <Text style={styles.linkText}>SignUp</Text>
@@ -226,6 +233,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 16,
     marginBottom: 12,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
     fontSize: 18,

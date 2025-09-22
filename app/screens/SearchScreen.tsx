@@ -12,10 +12,8 @@ import {
   View,
 } from "react-native";
 import ReportDetailModal from "../../components/ReportDetailModal";
-import {
-  CommunityReport,
-  useCommunityReports,
-} from "../../context/CommunityReportsContext";
+import { useCommunityReports } from "../../context/CommunityReportsContext";
+import { CommunityReport } from "../../types/api";
 
 export default function SearchScreen() {
   const { searchReports, toggleUpvote } = useCommunityReports();
@@ -280,8 +278,8 @@ export default function SearchScreen() {
             <Ionicons name="search-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>Search for Reports</Text>
             <Text style={styles.emptySubtitle}>
-              Enter a report ID like "CR001" or use keywords to find specific
-              reports
+              Enter a report ID like &quot;CR001&quot; or use keywords to find
+              specific reports
             </Text>
             <View style={styles.exampleContainer}>
               <Text style={styles.exampleTitle}>Example searches:</Text>
@@ -298,8 +296,8 @@ export default function SearchScreen() {
             <Ionicons name="document-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>No Reports Found</Text>
             <Text style={styles.emptySubtitle}>
-              No reports match your search "{searchQuery}". Try different
-              keywords or report IDs.
+              No reports match your search &quot;{searchQuery}&quot;. Try
+              different keywords or report IDs.
             </Text>
           </View>
         ) : (

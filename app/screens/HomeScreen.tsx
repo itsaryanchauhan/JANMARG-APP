@@ -12,11 +12,9 @@ import {
   View,
 } from "react-native";
 import ReportDetailModal from "../../components/ReportDetailModal";
-import {
-  CommunityReport,
-  useCommunityReports,
-} from "../../context/CommunityReportsContext";
+import { useCommunityReports } from "../../context/CommunityReportsContext";
 import { useLanguage } from "../../context/LanguageContext";
+import { CommunityReport } from "../../types/api";
 import { logger } from "../../utils/logger";
 
 export default function HomeScreen() {

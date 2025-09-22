@@ -1,36 +1,17 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
-import { mockPersonalReports } from "../data/mock/personalReports";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { ReportsService } from "../services/reportsService";
+import { isAuthenticated } from "../services/supabase";
+import { PersonalReport } from "../types/api";
 import { logger } from "../utils/logger";
 
-export interface Report {
-  id: string;
-  title: string;
-  description: string;
-  type: "pothole" | "broken-streetlight" | "garbage" | "overgrown-weed";
-  imageUri?: string;
-  imageSource?: any;
-  location?: {
-    latitude: number;
-    longitude: number;
-    address?: string;
-    fullAddress?: any;
-  };
-  timestamp: string;
-  status: "submitted" | "in-progress" | "resolved";
-  isAnonymous?: boolean;
-  timeline: {
-    id: string;
-    status:
-      | "submitted"
-      | "acknowledged"
-      | "assigned"
-      | "in-progress"
-      | "resolved";
-    timestamp: string;
-    description: string;
-    assignedTo?: string;
-  }[];
-}
+// Use the shared type instead of local interface
+export type Report = PersonalReport;
 
 interface ReportsContextType {
   reports: Report[];
@@ -38,58 +19,85 @@ interface ReportsContextType {
     report: Omit<Report, "id" | "timestamp" | "status" | "timeline"> & {
       isAnonymous?: boolean;
     }
-  ) => void;
+  ) => Promise<void>; // Made async for API calls
+  loading: boolean;
+  error: string | null;
+  refreshReports: () => Promise<void>;
 }
 
 const ReportsContext = createContext<ReportsContextType | undefined>(undefined);
 
 export function ReportsProvider({ children }: { children: ReactNode }) {
-  const [reports, setReports] = useState<Report[]>(mockPersonalReports);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  logger.info("ReportsProvider initialized", {
-    initialReportsCount: mockPersonalReports.length,
-  });
+  logger.info("ReportsProvider initialized");
 
-  const addReport = (
+  // Load reports on mount
+  useEffect(() => {
+    const loadReports = async () => {
+      const isUserAuthenticated = await isAuthenticated();
+      if (isUserAuthenticated) {
+        refreshReports();
+      } else {
+        logger.info("User not authenticated, skipping reports load");
+      }
+    };
+    loadReports();
+  }, []);
+
+  const refreshReports = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const apiReports = await ReportsService.getPersonalReports();
+      setReports(apiReports);
+      logger.info("Reports refreshed from API", { count: apiReports.length });
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to load reports";
+      setError(errorMessage);
+      logger.error("Failed to refresh reports", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addReport = async (
     reportData: Omit<Report, "id" | "timestamp" | "status" | "timeline"> & {
       isAnonymous?: boolean;
     }
   ) => {
-    logger.info("Adding new report", {
-      type: reportData.type,
-      isAnonymous: reportData.isAnonymous,
-    });
-    const reportId = Date.now().toString();
-    const timestamp = new Date().toISOString();
-
-    const newReport: Report = {
-      ...reportData,
-      id: reportId,
-      timestamp,
-      status: "submitted",
-      timeline: [
-        {
-          id: `${reportId}-1`,
-          status: "submitted",
-          timestamp,
-          description:
-            "Report submitted by " +
-            (reportData.isAnonymous ? "anonymous user" : "user"),
-        },
-      ],
-    };
-    setReports((prev) => {
-      const updated = [newReport, ...prev];
-      logger.info("Report added successfully", {
-        newReportId: reportId,
-        totalReports: updated.length,
+    try {
+      logger.info("Adding report via API", {
+        type: reportData.type,
+        isAnonymous: reportData.isAnonymous,
       });
-      return updated;
-    });
+      const newReport = await ReportsService.createPersonalReport(reportData);
+      setReports((prev) => [newReport, ...prev]);
+      logger.info("Report added successfully via API", {
+        newReportId: newReport.id,
+      });
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to add report";
+      setError(errorMessage);
+      logger.error("Failed to add report", err);
+      throw err; // Re-throw so components can handle it
+    }
   };
 
   return (
-    <ReportsContext.Provider value={{ reports, addReport }}>
+    <ReportsContext.Provider
+      value={{
+        reports,
+        addReport,
+        loading,
+        error,
+        refreshReports,
+      }}
+    >
       {children}
     </ReportsContext.Provider>
   );

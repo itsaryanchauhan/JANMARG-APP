@@ -149,7 +149,7 @@ export default function OnboardingScreen() {
           >
             Browse reports in your area and stay informed about ongoing issues.
             Use the search feature to find specific problems or filter by status
-            to see what's being worked on.
+            to see what&apos;s being worked on.
           </Text>
         </View>
 
