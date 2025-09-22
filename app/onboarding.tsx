@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import Swiper from "react-native-swiper";
+import { logger } from "../utils/logger";
 
 const { width: w, height: h } = Dimensions.get("window");
 
@@ -20,7 +21,10 @@ export default function OnboardingScreen() {
   const isDarkMode = useColorScheme() === "dark";
   const router = useRouter();
 
+  logger.info("OnboardingScreen rendered");
+
   const handleFinish = () => {
+    logger.info("Onboarding finished, navigating to home");
     router.push("./home");
   };
 

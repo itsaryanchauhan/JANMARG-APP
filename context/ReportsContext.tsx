@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { mockPersonalReports } from "../data/mock/personalReports";
+import { logger } from "../utils/logger";
 
 export interface Report {
   id: string;
@@ -45,11 +46,19 @@ const ReportsContext = createContext<ReportsContextType | undefined>(undefined);
 export function ReportsProvider({ children }: { children: ReactNode }) {
   const [reports, setReports] = useState<Report[]>(mockPersonalReports);
 
+  logger.info("ReportsProvider initialized", {
+    initialReportsCount: mockPersonalReports.length,
+  });
+
   const addReport = (
     reportData: Omit<Report, "id" | "timestamp" | "status" | "timeline"> & {
       isAnonymous?: boolean;
     }
   ) => {
+    logger.info("Adding new report", {
+      type: reportData.type,
+      isAnonymous: reportData.isAnonymous,
+    });
     const reportId = Date.now().toString();
     const timestamp = new Date().toISOString();
 
@@ -69,7 +78,14 @@ export function ReportsProvider({ children }: { children: ReactNode }) {
         },
       ],
     };
-    setReports((prev) => [newReport, ...prev]);
+    setReports((prev) => {
+      const updated = [newReport, ...prev];
+      logger.info("Report added successfully", {
+        newReportId: reportId,
+        totalReports: updated.length,
+      });
+      return updated;
+    });
   };
 
   return (

@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ReportDetailModal from "../components/ReportDetailModal";
-import { useLanguage } from "../context/LanguageContext";
-import { Report, useReports } from "../context/ReportsContext";
+import ReportDetailModal from "../../components/ReportDetailModal";
+import { useLanguage } from "../../context/LanguageContext";
+import { Report, useReports } from "../../context/ReportsContext";
 
 export default function MyReportsScreen() {
   const { reports } = useReports();

@@ -18,6 +18,7 @@ import {
 import { WebView } from "react-native-webview";
 import { useCommunityReports } from "../context/CommunityReportsContext";
 import { useReports } from "../context/ReportsContext";
+import { logger } from "../utils/logger";
 
 interface CreateReportModalProps {
   visible: boolean;
@@ -68,6 +69,8 @@ export default function CreateReportModal({
   visible,
   onClose,
 }: CreateReportModalProps) {
+  logger.info("CreateReportModal rendered", { visible });
+
   const [description, setDescription] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIssueType, setSelectedIssueType] = useState<string | null>(
@@ -241,56 +244,79 @@ export default function CreateReportModal({
   };
 
   const handleSubmit = async () => {
+    logger.info("Report submission started", {
+      hasDescription: !!description.trim(),
+      selectedIssueType,
+      hasImage: !!selectedImage,
+      isAnonymous,
+      selectedWard,
+      selectedArea,
+    });
+
     if (!description.trim()) {
+      logger.warn("Report submission failed: no description");
       Alert.alert("Error", "Please add a description for your report.");
       return;
     }
 
     if (!selectedIssueType) {
+      logger.warn("Report submission failed: no issue type selected");
       Alert.alert("Error", "Please select an issue type.");
       return;
     }
 
     setIsSubmitting(true);
 
-    // Add report to personal reports context
-    const selectedType = issueTypes.find(
-      (type) => type.value === selectedIssueType
-    );
-    addReport({
-      title: selectedType?.label || "Unknown Issue",
-      description: description.trim(),
-      type: selectedIssueType as any,
-      imageUri: selectedImage || undefined,
-      location: currentLocation,
-      isAnonymous: isAnonymous,
-    });
+    try {
+      // Add report to personal reports context
+      const selectedType = issueTypes.find(
+        (type) => type.value === selectedIssueType
+      );
+      addReport({
+        title: selectedType?.label || "Unknown Issue",
+        description: description.trim(),
+        type: selectedIssueType as any,
+        imageUri: selectedImage || undefined,
+        location: currentLocation,
+        isAnonymous: isAnonymous,
+      });
 
-    // Also add to community reports so it appears in HomeScreen
-    const reportArea = selectedWard || selectedArea; // Use selected ward or current selected area
-    addCommunityReport({
-      title: selectedType?.label || "Unknown Issue",
-      description: description.trim(),
-      type: selectedIssueType as any,
-      imageUri: selectedImage || undefined,
-      location: {
-        latitude: currentLocation?.latitude || 0,
-        longitude: currentLocation?.longitude || 0,
-        address: currentLocation?.address || `${reportArea}, Jharkhand`,
-        area: reportArea,
-      },
-    });
-
-    setIsSubmitting(false);
-    Alert.alert("Success", "Your report has been submitted successfully!", [
-      {
-        text: "OK",
-        onPress: () => {
-          resetForm();
-          onClose();
+      // Also add to community reports so it appears in HomeScreen
+      const reportArea = selectedWard || selectedArea; // Use selected ward or current selected area
+      addCommunityReport({
+        title: selectedType?.label || "Unknown Issue",
+        description: description.trim(),
+        type: selectedIssueType as any,
+        imageUri: selectedImage || undefined,
+        location: {
+          latitude: currentLocation?.latitude || 0,
+          longitude: currentLocation?.longitude || 0,
+          address: currentLocation?.address || `${reportArea}, Jharkhand`,
+          area: reportArea,
         },
-      },
-    ]);
+      });
+
+      logger.info("Report submitted successfully", {
+        type: selectedIssueType,
+        area: reportArea,
+        isAnonymous,
+      });
+
+      setIsSubmitting(false);
+      Alert.alert("Success", "Your report has been submitted successfully!", [
+        {
+          text: "OK",
+          onPress: () => {
+            resetForm();
+            onClose();
+          },
+        },
+      ]);
+    } catch (error) {
+      logger.error("Report submission failed", error);
+      setIsSubmitting(false);
+      Alert.alert("Error", "Failed to submit report. Please try again.");
+    }
   };
 
   const resetForm = () => {

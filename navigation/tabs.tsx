@@ -11,12 +11,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Import screen components
+import CreateReportScreen from "../app/screens/CreateReportScreen";
+import HomeScreen from "../app/screens/HomeScreen";
+import MyReportsScreen from "../app/screens/MyReportsScreen";
+import ProfileScreen from "../app/screens/ProfileScreen";
+import SearchScreen from "../app/screens/SearchScreen";
 import CreateReportModal from "../components/CreateReportModal";
-import CreateReportScreen from "../screens/CreateReportScreen";
-import HomeScreen from "../screens/HomeScreen";
-import MyReportsScreen from "../screens/MyReportsScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import SearchScreen from "../screens/SearchScreen";
+import { logger } from "../utils/logger";
 
 const Tab = createBottomTabNavigator();
 const { width, height } = Dimensions.get("window");
@@ -24,6 +25,8 @@ const { width, height } = Dimensions.get("window");
 const Tabs = () => {
   const [showCreateReportModal, setShowCreateReportModal] = useState(false);
   const insets = useSafeAreaInsets();
+
+  logger.info("Tabs navigator rendered");
 
   // Responsive breakpoints and values calculated at runtime
   const isTablet = width >= 768;

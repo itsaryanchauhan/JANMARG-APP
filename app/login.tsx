@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { logger } from "../utils/logger";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -18,12 +19,20 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const VALID_EMAIL = "abc@gmail.com";
-  const VALID_PASSWORD = "abcd123";
+  const VALID_PASSWORD = "abc123";
+
+  logger.info("LoginScreen rendered");
 
   const handleLogin = () => {
+    logger.info("Login attempt", { email: email ? "provided" : "empty" });
     if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+      logger.info("Login successful, navigating to onboarding");
       router.push("./onboarding");
     } else {
+      logger.warn("Login failed: invalid credentials", {
+        email,
+        passwordProvided: !!password,
+      });
       Alert.alert(
         "Login Failed",
         "Invalid credentials. Please use the test credentials shown below.",
@@ -74,7 +83,7 @@ export default function LoginScreen() {
           >
             <Text style={styles.credentialsTitle}>Test Credentials:</Text>
             <Text style={styles.credentialsText}>Email: abc@gmail.com</Text>
-            <Text style={styles.credentialsText}>Password: abcd123</Text>
+            <Text style={styles.credentialsText}>Password: abc123</Text>
           </Animated.View>
 
           <Animated.View

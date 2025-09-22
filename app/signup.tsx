@@ -9,8 +9,10 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { logger } from "../utils/logger";
 
 export default function SignupScreen() {
+  logger.info("SignupScreen rendered");
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    backgroundColor: "#0ea5e9",
+    backgroundColor: "#2E6A56",
     padding: 12,
     borderRadius: 16,
     marginBottom: 12,
@@ -184,6 +186,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   linkText: {
-    color: "#0284c7",
+    color: "#2E6A56",
   },
 });

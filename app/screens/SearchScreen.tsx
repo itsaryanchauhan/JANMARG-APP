@@ -11,11 +11,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ReportDetailModal from "../components/ReportDetailModal";
+import ReportDetailModal from "../../components/ReportDetailModal";
 import {
   CommunityReport,
   useCommunityReports,
-} from "../context/CommunityReportsContext";
+} from "../../context/CommunityReportsContext";
 
 export default function SearchScreen() {
   const { searchReports, toggleUpvote } = useCommunityReports();

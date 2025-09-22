@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { mockAreas, mockCommunityReports } from "../data/mock";
+import { logger } from "../utils/logger";
 
 export interface CommunityReport {
   id: string;
@@ -245,6 +246,10 @@ export function CommunityReportsProvider({
       | "reporter"
     >
   ) => {
+    logger.info("Adding community report", {
+      type: reportData.type,
+      area: reportData.location.area,
+    });
     const reportId = `user_${Date.now()}`;
     const timestamp = new Date().toISOString();
 
@@ -262,7 +267,14 @@ export function CommunityReportsProvider({
       timeline: generateTimeline(reportId, "submitted", timestamp),
     };
 
-    setReports((prev) => [newReport, ...prev]);
+    setReports((prev) => {
+      const updated = [newReport, ...prev];
+      logger.info("Community report added", {
+        reportId,
+        totalReports: updated.length,
+      });
+      return updated;
+    });
   };
 
   return (

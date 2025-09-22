@@ -11,12 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ReportDetailModal from "../components/ReportDetailModal";
+import ReportDetailModal from "../../components/ReportDetailModal";
 import {
   CommunityReport,
   useCommunityReports,
-} from "../context/CommunityReportsContext";
-import { useLanguage } from "../context/LanguageContext";
+} from "../../context/CommunityReportsContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { logger } from "../../utils/logger";
 
 export default function HomeScreen() {
   const {
@@ -26,6 +27,8 @@ export default function HomeScreen() {
     toggleUpvote,
     getReportsForArea,
   } = useCommunityReports();
+
+  logger.info("HomeScreen rendered", { selectedArea });
 
   const { currentLanguage, setLanguage, availableLanguages, t } = useLanguage();
 
