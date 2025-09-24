@@ -45,19 +45,19 @@ export default function LoginScreen() {
       <StatusBar style="light" />
       <Image
         style={styles.backgroundImage}
-        source={require("../assets/images/background.png")}
+        source={require("../assets/images/background.webp")}
       />
 
       {/* lights */}
       <View style={styles.lightsContainer}>
         <Animated.Image
           entering={FadeInUp.delay(200).duration(1000).springify()}
-          source={require("../assets/images/light.png")}
+          source={require("../assets/images/light.webp")}
           style={styles.lightLarge}
         />
         <Animated.Image
           entering={FadeInUp.delay(400).duration(1000).springify()}
-          source={require("../assets/images/light.png")}
+          source={require("../assets/images/light.webp")}
           style={styles.lightSmall}
         />
       </View>

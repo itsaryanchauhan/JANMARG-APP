@@ -619,7 +619,7 @@ export default function CreateReportModal({
                             <script>
                                 var map = L.map('map').setView([${currentLocation.latitude}, ${currentLocation.longitude}], 16);
                                 
-                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.webp', {
                                     attribution: '© OpenStreetMap contributors'
                                 }).addTo(map);
                                 

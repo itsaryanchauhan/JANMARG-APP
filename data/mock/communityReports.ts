@@ -8,7 +8,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "The streetlight near Bokaro Steel Plant gate on Station Road has been non-functional for over two weeks. This creates safety concerns for shift workers returning home late at night.",
     type: "broken-streetlight",
-    imageSource: require("../../assets/images/mock_image/broken_streetlight.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_streetlight.webp"),
     location: {
       latitude: 23.7958,
       longitude: 86.1511,
@@ -39,7 +39,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Large pothole on National Highway 32 near Chatra bus stand causing severe vehicle damage. Water logging during monsoon makes it extremely hazardous for two-wheelers.",
     type: "pothole",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2084,
       longitude: 84.8717,
@@ -84,7 +84,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Garbage has not been collected from Baba Adam Market area in Deoghar for the past 4 days. With the temple town receiving many visitors, this creates serious hygiene concerns.",
     type: "garbage-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.4823,
       longitude: 86.6937,
@@ -136,7 +136,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Heavy waterlogging in residential area near Dhanbad coal mines due to blocked drainage. Water accumulation causes health hazards and affects coal transport vehicles.",
     type: "water-issue",
-    imageSource: require("../../assets/images/mock_image/overflowing_drain.jpg"),
+    imageSource: require("../../assets/images/mock_image/overflowing_drain.webp"),
     location: {
       latitude: 23.7957,
       longitude: 86.4304,
@@ -167,7 +167,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "The footpath near Dumka District Hospital is severely damaged with broken tiles and exposed manholes. This poses serious risk to patients and their families visiting the hospital.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2689,
       longitude: 87.2494,
@@ -205,7 +205,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Cars are constantly parked in front of the emergency exit of Green Valley Public Park blocking access for ambulances and fire trucks. This violates safety norms and puts lives at risk.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.650834,
       longitude: 77.315245,
@@ -250,7 +250,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "The traffic signal at the main intersection of Commercial Hub has been malfunctioning for 2 days. All lights blink simultaneously causing massive traffic jams and increasing accident risk.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.628912,
       longitude: 77.206523,
@@ -302,7 +302,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Pack of aggressive stray dogs in Residential Colony Block A attacking residents, especially children and elderly. Multiple incidents reported. Urgent sterilization and relocation needed.",
     type: "animal-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.669223,
       longitude: 77.115134,
@@ -333,7 +333,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Several tiles on Platform 2 of the Metro Station are broken and loose creating tripping hazards. During rush hours, this becomes extremely dangerous for commuters.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.549712,
       longitude: 77.281834,
@@ -371,7 +371,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Unauthorized vendors have occupied the entire sidewalk in Market Square making it impossible for pedestrians to walk. The encroachment also blocks access to nearby shops.",
     type: "encroachment",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.616534,
       longitude: 77.230812,
@@ -416,7 +416,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Multiple deep potholes have developed on the service road of NH-24 near Indirapuram causing significant traffic delays and vehicle damage.",
     type: "pothole",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.458523,
       longitude: 77.026734,
@@ -447,7 +447,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "The community garbage bins in Sector 12 are overflowing for the past week. The stench is unbearable and attracting rodents and insects.",
     type: "garbage-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.407934,
       longitude: 77.043521,
@@ -492,7 +492,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "No water supply in Park View residential area for 3 consecutive days. Water tankers requested but not yet arrived. Residents facing severe hardship.",
     type: "water-issue",
-    imageSource: require("../../assets/images/mock_image/overflowing_drain.jpg"),
+    imageSource: require("../../assets/images/mock_image/overflowing_drain.webp"),
     location: {
       latitude: 28.535412,
       longitude: 77.250634,
@@ -544,7 +544,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Follow-up on the previously reported damaged footpath near Model Town Metro. The temporary barriers are insufficient and more permanent solution needed.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.703123,
       longitude: 77.102467,
@@ -575,7 +575,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "All the street lights in Green Valley Park area have been non-functional for over a month. The area becomes very dark and unsafe for evening walkers and joggers.",
     type: "broken-streetlight",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.649834,
       longitude: 77.314245,
@@ -613,7 +613,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Due to the recent signal repair, traffic patterns have changed but proper lane markings and signage are missing causing confusion and congestion during peak hours.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.627912,
       longitude: 77.205523,
@@ -644,7 +644,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Additional stray dogs have joined the pack in Residential Colony. The situation is worsening with aggressive behavior increasing. Immediate intervention required.",
     type: "animal-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.668223,
       longitude: 77.114134,
@@ -675,7 +675,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "With the ongoing tile repair at Platform 2, temporary yellow tape barriers are insufficient. Better safety measures needed to prevent accidents during rush hours.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.548712,
       longitude: 77.280834,
@@ -706,7 +706,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "While the encroachment issue is being addressed, alternative space for genuine vendors needed. Many are daily wage earners and need designated vending zones.",
     type: "encroachment",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.615534,
       longitude: 77.229812,
@@ -744,7 +744,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "The community park near the market needs urgent maintenance. Broken swings, damaged benches, and overgrown grass making it unusable for families with children.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 28.649012,
       longitude: 77.315145,
@@ -790,7 +790,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Heavy water accumulation near the residential sector 4 of Bokaro Steel City during monsoon. The drainage system appears blocked, causing inconvenience to BSL employees and their families.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 23.7887,
       longitude: 86.1517,
@@ -820,7 +820,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Major potholes and broken road surface near Bokaro Mall main entrance. Heavy vehicles from steel plant are causing further damage. Immediate repair needed for safety.",
     type: "pothole",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 23.7925,
       longitude: 86.1489,
@@ -864,7 +864,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Large pile of garbage near Chas market area, Bokaro. Foul smell and potential health hazard for shopkeepers and customers. Municipal waste collection appears irregular.",
     type: "garbage",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 23.8156,
       longitude: 86.1661,
@@ -901,7 +901,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Street lighting not working near BSL Gate 2 for past one week. Night shift workers facing difficulty while commuting. Multiple bulbs need replacement.",
     type: "broken-streetlight",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 23.7934,
       longitude: 86.1523,
@@ -953,7 +953,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Small bridge over Nalkari river on Chatra-Gaya road has developed cracks. Monsoon damage visible with loose concrete blocks. Heavy vehicle movement restricted.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2145,
       longitude: 84.8695,
@@ -983,7 +983,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Main drainage line at Chatra bus stand is overflowing causing water stagnation. Passengers facing difficulty during boarding and alighting. Urgent cleaning required.",
     type: "infrastructure",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2067,
       longitude: 84.8721,
@@ -1027,7 +1027,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Increased wild elephant movement near Chatra town outskirts. Several crop damage incidents reported. Local farmers requesting immediate forest department intervention.",
     type: "animal-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.1987,
       longitude: 84.8543,
@@ -1065,7 +1065,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Major water supply pipeline burst in Pratappur area of Chatra. Water scarcity affecting 200+ households. Emergency repair needed before summer season.",
     type: "water-issue",
-    imageSource: require("../../assets/images/mock_image/overflowing_drain.jpg"),
+    imageSource: require("../../assets/images/mock_image/overflowing_drain.webp"),
     location: {
       latitude: 24.2156,
       longitude: 84.8789,
@@ -1109,7 +1109,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Heavy traffic congestion during market hours at main Chatra market square. Lack of proper traffic management causing long delays and pollution.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2089,
       longitude: 84.8712,
@@ -1147,7 +1147,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Unauthorized construction on government land near Chatra railway station. Multiple shops built without permission blocking pedestrian pathways.",
     type: "encroachment",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2034,
       longitude: 84.8734,
@@ -1177,7 +1177,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Unhygienic conditions at Chatra Primary Health Center. Waste disposal not proper, bad odor affecting patients. Cleaning and maintenance required urgently.",
     type: "garbage-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.jpg"),
+    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
     location: {
       latitude: 24.2098,
       longitude: 84.8756,

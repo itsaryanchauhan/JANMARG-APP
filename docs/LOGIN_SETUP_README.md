@@ -22,8 +22,8 @@ app/
 
 assets/
 └── images/
-    ├── background.png   # Background image placeholder
-    └── light.png        # Hanging lamp image placeholder
+    ├── background.webp   # Background image placeholder
+    └── light.webp        # Hanging lamp image placeholder
 ```
 
 ## Implemented Setup
@@ -105,8 +105,8 @@ Using NativeWind classes for rapid development:
 
 Replace the placeholder images in `assets/images/` with:
 
-- `background.png` - A beautiful gradient or landscape background
-- `light.png` - A hanging lamp or light fixture image
+- `background.webp` - A beautiful gradient or landscape background
+- `light.webp` - A hanging lamp or light fixture image
 
 ## Next Steps
 

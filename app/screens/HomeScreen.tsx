@@ -147,7 +147,6 @@ export default function HomeScreen() {
           <Text style={styles.reportTitle} numberOfLines={2}>
             {report.title}
           </Text>
-          <Text style={styles.reportLocation}>{report.location.address}</Text>
           <View style={styles.reportMeta}>
             <Text style={styles.reportTime}>
               {formatDate(report.timestamp)}
@@ -169,10 +168,6 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <Text style={styles.reportDescription} numberOfLines={2}>
-        {report.description}
-      </Text>
-
       {(report.imageSource || report.imageUri) && (
         <View style={styles.reportImageContainer}>
           <Image
@@ -180,8 +175,18 @@ export default function HomeScreen() {
             style={styles.reportImage}
             resizeMode="cover"
           />
+          <View style={styles.locationOverlay}>
+            <Ionicons name="location" size={14} color="#FFFFFF" />
+            <Text style={styles.locationOverlayText} numberOfLines={1}>
+              {report.location.address}
+            </Text>
+          </View>
         </View>
       )}
+
+      <Text style={styles.reportDescription} numberOfLines={2}>
+        {report.description}
+      </Text>
 
       <View style={styles.reportFooter}>
         <TouchableOpacity
@@ -653,11 +658,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     lineHeight: 20,
   },
-  reportLocation: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 6,
-  },
   reportMeta: {
     flexDirection: "row",
     alignItems: "center",
@@ -778,6 +778,23 @@ const styles = StyleSheet.create({
   },
   reportImage: {
     width: "100%",
-    height: 150,
+    height: 200,
+  },
+  locationOverlay: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    borderRadius: 8,
+    padding: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    maxWidth: "70%",
+  },
+  locationOverlayText: {
+    color: "#FFFFFF",
+    fontSize: 12,
+    marginLeft: 4,
+    flex: 1,
   },
 });

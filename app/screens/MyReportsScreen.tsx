@@ -147,73 +147,79 @@ export default function MyReportsScreen() {
         <>
           {/* Filter Buttons */}
           <View style={styles.filterContainer}>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                statusFilter === "all" && styles.filterButtonActive,
-              ]}
-              onPress={() => setStatusFilter("all")}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.filterScrollContent}
             >
-              <Text
+              <TouchableOpacity
                 style={[
-                  styles.filterText,
-                  statusFilter === "all" && styles.filterTextActive,
+                  styles.filterButton,
+                  statusFilter === "all" && styles.filterButtonActive,
                 ]}
+                onPress={() => setStatusFilter("all")}
               >
-                All ({reports.length})
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                statusFilter === "submitted" && styles.filterButtonActive,
-              ]}
-              onPress={() => setStatusFilter("submitted")}
-            >
-              <Text
+                <Text
+                  style={[
+                    styles.filterText,
+                    statusFilter === "all" && styles.filterTextActive,
+                  ]}
+                >
+                  All ({reports.length})
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
-                  styles.filterText,
-                  statusFilter === "submitted" && styles.filterTextActive,
+                  styles.filterButton,
+                  statusFilter === "submitted" && styles.filterButtonActive,
                 ]}
+                onPress={() => setStatusFilter("submitted")}
               >
-                Submitted (
-                {reports.filter((r) => r.status === "submitted").length})
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                statusFilter === "in-progress" && styles.filterButtonActive,
-              ]}
-              onPress={() => setStatusFilter("in-progress")}
-            >
-              <Text
+                <Text
+                  style={[
+                    styles.filterText,
+                    statusFilter === "submitted" && styles.filterTextActive,
+                  ]}
+                >
+                  Submitted (
+                  {reports.filter((r) => r.status === "submitted").length})
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
-                  styles.filterText,
-                  statusFilter === "in-progress" && styles.filterTextActive,
+                  styles.filterButton,
+                  statusFilter === "in-progress" && styles.filterButtonActive,
                 ]}
+                onPress={() => setStatusFilter("in-progress")}
               >
-                In Progress (
-                {reports.filter((r) => r.status === "in-progress").length})
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.filterButton,
-                statusFilter === "resolved" && styles.filterButtonActive,
-              ]}
-              onPress={() => setStatusFilter("resolved")}
-            >
-              <Text
+                <Text
+                  style={[
+                    styles.filterText,
+                    statusFilter === "in-progress" && styles.filterTextActive,
+                  ]}
+                >
+                  In Progress (
+                  {reports.filter((r) => r.status === "in-progress").length})
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
-                  styles.filterText,
-                  statusFilter === "resolved" && styles.filterTextActive,
+                  styles.filterButton,
+                  statusFilter === "resolved" && styles.filterButtonActive,
                 ]}
+                onPress={() => setStatusFilter("resolved")}
               >
-                Resolved (
-                {reports.filter((r) => r.status === "resolved").length})
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.filterText,
+                    statusFilter === "resolved" && styles.filterTextActive,
+                  ]}
+                >
+                  Resolved (
+                  {reports.filter((r) => r.status === "resolved").length})
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
 
           <View style={styles.statsContainer}>
@@ -258,16 +264,9 @@ export default function MyReportsScreen() {
                 </View>
                 <View style={styles.reportContent}>
                   <View style={styles.titleRow}>
-                    <Text style={styles.reportTitle}>{report.title}</Text>
-                  </View>
-                  <View style={styles.statusAndAnonymousRow}>
-                    {report.isAnonymous && (
-                      <View style={styles.anonymousTag}>
-                        <Text style={styles.anonymousText}>
-                          {t("anonymous")}
-                        </Text>
-                      </View>
-                    )}
+                    <Text style={styles.reportTitle} numberOfLines={1}>
+                      {report.title}
+                    </Text>
                   </View>
                   <Text style={styles.reportTime}>
                     {formatDate(report.timestamp)}
@@ -297,12 +296,19 @@ export default function MyReportsScreen() {
               {report.location && (
                 <View style={styles.locationContainer}>
                   <Ionicons name="location" size={16} color="#666" />
-                  <Text style={styles.locationText}>
+                  <Text style={styles.locationText} numberOfLines={1}>
                     {report.location.address ||
                       `${report.location.latitude.toFixed(
                         4
                       )}, ${report.location.longitude.toFixed(4)}`}
                   </Text>
+                </View>
+              )}
+              {report.isAnonymous && (
+                <View style={styles.anonymousContainer}>
+                  <View style={styles.anonymousTag}>
+                    <Text style={styles.anonymousText}>{t("anonymous")}</Text>
+                  </View>
                 </View>
               )}
             </TouchableOpacity>
@@ -379,6 +385,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    flexWrap: "wrap",
+    justifyContent: "space-around",
     ...(Platform.OS === "android" && {
       backgroundColor: "#FFFFFF",
       borderWidth: 0.5,
@@ -386,8 +394,9 @@ const styles = StyleSheet.create({
     }),
   },
   statItem: {
-    flex: 1,
     alignItems: "center",
+    minWidth: 70,
+    marginHorizontal: 8,
   },
   statNumber: {
     fontSize: 24,
@@ -462,8 +471,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   reportImage: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     borderRadius: 8,
     marginLeft: 12,
   },
@@ -502,10 +511,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   filterContainer: {
-    flexDirection: "row",
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
-    padding: 4,
     marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -521,13 +528,18 @@ const styles = StyleSheet.create({
       borderColor: "#f0f0f0",
     }),
   },
+  filterScrollContent: {
+    padding: 4,
+    flexDirection: "row",
+  },
   filterButton: {
-    flex: 1,
     paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    marginHorizontal: 2,
+    minWidth: 80,
   },
   filterButtonActive: {
     backgroundColor: "#2E6A56",
@@ -567,5 +579,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 4,
+  },
+  anonymousContainer: {
+    marginTop: 8,
+    alignItems: "flex-start",
   },
 });

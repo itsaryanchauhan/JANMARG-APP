@@ -1,7 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useRef } from "react";
 import {
   Dimensions,
   Image,
@@ -10,16 +10,19 @@ import {
   Text,
   TouchableOpacity,
   useColorScheme,
+  useWindowDimensions,
   View,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { logger } from "../utils/logger";
 
-const { width: w, height: h } = Dimensions.get("window");
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function OnboardingScreen() {
   const isDarkMode = useColorScheme() === "dark";
   const router = useRouter();
+  const { width, height } = useWindowDimensions();
+  const swiperRef = useRef<Swiper>(null);
 
   logger.info("OnboardingScreen rendered");
 
@@ -27,6 +30,21 @@ export default function OnboardingScreen() {
     logger.info("Onboarding finished, navigating to home");
     router.push("./home");
   };
+
+  const handleNext = () => {
+    swiperRef.current?.scrollBy(1);
+  };
+
+  const handlePrev = () => {
+    swiperRef.current?.scrollBy(-1);
+  };
+
+  // Calculate responsive dimensions
+  const imageWidth = Math.min(width * 0.85, 350);
+  const imageHeight = Math.min(height * 0.35, 280);
+  const titleFontSize = Math.max(width * 0.06, 24);
+  const textFontSize = Math.max(width * 0.04, 14);
+  const buttonSize = Math.max(width * 0.12, 50);
 
   return (
     <View
@@ -39,63 +57,19 @@ export default function OnboardingScreen() {
         style={isDarkMode ? "light" : "dark"}
         backgroundColor={isDarkMode ? "#1a1a1a" : "#ffffff"}
       />
+    <View style={styles.swiperContainer}>
       <Swiper
         style={{ backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" }}
         removeClippedSubviews={Platform.OS === "android" ? false : true}
         loadMinimal={Platform.OS === "android" ? false : true}
-        buttonWrapperStyle={{
-          backgroundColor: "transparent",
-          flexDirection: "row",
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          flex: 1,
-          paddingHorizontal: 30,
-          paddingVertical: 20,
-          justifyContent: "flex-end",
-          alignItems: "flex-end",
-        }}
-        showsButtons={true}
+        showsButtons={false}
         loop={false}
         paginationStyle={{
-          marginRight: w * 0.7,
-          marginBottom: h * 0.02,
+          bottom: 20,
         }}
         activeDotColor={isDarkMode ? "#ffffff" : "#000000"}
         dotColor={isDarkMode ? "#666666" : "#cccccc"}
-        nextButton={
-          <View
-            style={[
-              styles.navButton,
-              {
-                backgroundColor: isDarkMode ? "#ffffff" : "#000000",
-              },
-            ]}
-          >
-            <AntDesign
-              name="right"
-              size={22}
-              color={isDarkMode ? "#000000" : "#ffffff"}
-            />
-          </View>
-        }
-        prevButton={
-          <View
-            style={[
-              styles.navButton,
-              {
-                backgroundColor: isDarkMode ? "#ffffff" : "#000000",
-                marginHorizontal: 20,
-              },
-            ]}
-          >
-            <AntDesign
-              name="left"
-              size={22}
-              color={isDarkMode ? "#000000" : "#ffffff"}
-            />
-          </View>
-        }
+        ref={(ref) => { swiperRef.current = ref; }}
       >
         {/* Slide 1 */}
         <View
@@ -105,7 +79,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/onboarding/onboarding1.png")}
+            source={require("../assets/images/onboarding/onboarding1.webp")}
             style={styles.img}
           />
           <Text
@@ -133,7 +107,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/onboarding/onboarding2.png")}
+            source={require("../assets/images/onboarding/onboarding2.webp")}
             style={styles.img}
           />
           <Text
@@ -161,7 +135,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/onboarding/onboarding3.png")}
+            source={require("../assets/images/onboarding/onboarding3.webp")}
             style={styles.img}
           />
           <Text
@@ -189,7 +163,7 @@ export default function OnboardingScreen() {
           ]}
         >
           <Image
-            source={require("../assets/images/onboarding/onboarding4.png")}
+            source={require("../assets/images/onboarding/onboarding4.webp")}
             style={styles.img}
           />
           <Text
@@ -227,6 +201,50 @@ export default function OnboardingScreen() {
         </View>
       </Swiper>
     </View>
+
+      {/* Custom Navigation Buttons */}
+      <TouchableOpacity
+        style={[
+          styles.navButton,
+          {
+            backgroundColor: isDarkMode ? "#ffffff" : "#000000",
+            position: "absolute",
+            bottom: 20,
+            right: 20 + buttonSize + 15,
+            width: buttonSize,
+            height: buttonSize,
+          },
+        ]}
+        onPress={handlePrev}
+      >
+        <AntDesign
+          name="left"
+          size={buttonSize * 0.35}
+          color={isDarkMode ? "#000000" : "#ffffff"}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[
+          styles.navButton,
+          {
+            backgroundColor: isDarkMode ? "#ffffff" : "#000000",
+            position: "absolute",
+            bottom: 20,
+            right: 20,
+            width: buttonSize,
+            height: buttonSize,
+          },
+        ]}
+        onPress={handleNext}
+      >
+        <AntDesign
+          name="right"
+          size={buttonSize * 0.35}
+          color={isDarkMode ? "#000000" : "#ffffff"}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -235,10 +253,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff", // Default fallback for Android
   },
+  swiperContainer: {
+    flex: 1,
+  },
   slide: {
     flex: 1,
-    paddingTop: 80,
-    marginHorizontal: 30,
+    paddingTop: Math.max(screenHeight * 0.08, 60),
+    paddingHorizontal: Math.max(screenWidth * 0.08, 20),
     justifyContent: "center",
     alignItems: "center",
   },
@@ -246,43 +267,43 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderBottomRightRadius: 80,
     borderTopLeftRadius: 80,
-    height: h * 0.5,
-    width: w * 0.9,
+    height: screenHeight * 0.35,
+    width: screenWidth * 0.85,
+    maxHeight: 280,
+    maxWidth: 350,
     resizeMode: "cover",
-    backgroundColor: "transparent", // Ensure no background color on image
+    backgroundColor: "transparent",
     ...(Platform.OS === "android" && {
-      backgroundColor: "rgba(255, 255, 255, 0)", // Android-specific transparent background
+      backgroundColor: "rgba(255, 255, 255, 0)",
     }),
   },
   title: {
-    marginTop: 60,
-    marginHorizontal: 10,
-    fontSize: 30,
+    marginTop: Math.max(screenHeight * 0.06, 40),
+    marginHorizontal: Math.max(screenWidth * 0.05, 10),
+    fontSize: Math.max(screenWidth * 0.07, 24),
     fontWeight: "bold",
   },
   text: {
-    marginTop: 20,
-    fontSize: 16,
-    lineHeight: 24,
-    marginLeft: 10,
-    marginRight: 10,
+    marginTop: Math.max(screenHeight * 0.02, 15),
+    fontSize: Math.max(screenWidth * 0.04, 14),
+    lineHeight: Math.max(screenWidth * 0.055, 20),
+    marginHorizontal: Math.max(screenWidth * 0.05, 10),
+    textAlign: "center",
   },
   navButton: {
-    height: 60,
-    borderRadius: 30,
     alignItems: "center",
-    width: 60,
     justifyContent: "center",
+    borderRadius: 25, // Make buttons circular
   },
   finishButton: {
-    marginTop: 40,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
+    marginTop: Math.max(screenHeight * 0.04, 30),
+    paddingHorizontal: Math.max(screenWidth * 0.08, 24),
+    paddingVertical: Math.max(screenHeight * 0.02, 12),
     borderRadius: 25,
     alignSelf: "center",
   },
   finishButtonText: {
-    fontSize: 18,
+    fontSize: Math.max(screenWidth * 0.045, 16),
     fontWeight: "bold",
   },
 });
