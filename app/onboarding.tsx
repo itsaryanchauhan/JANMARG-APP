@@ -57,150 +57,164 @@ export default function OnboardingScreen() {
         style={isDarkMode ? "light" : "dark"}
         backgroundColor={isDarkMode ? "#1a1a1a" : "#ffffff"}
       />
-    <View style={styles.swiperContainer}>
-      <Swiper
-        style={{ backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" }}
-        removeClippedSubviews={Platform.OS === "android" ? false : true}
-        loadMinimal={Platform.OS === "android" ? false : true}
-        showsButtons={false}
-        loop={false}
-        paginationStyle={{
-          bottom: 20,
-        }}
-        activeDotColor={isDarkMode ? "#ffffff" : "#000000"}
-        dotColor={isDarkMode ? "#666666" : "#cccccc"}
-        ref={(ref) => { swiperRef.current = ref; }}
-      >
-        {/* Slide 1 */}
-        <View
-          style={[
-            styles.slide,
-            { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
-          ]}
+      <View style={styles.swiperContainer}>
+        <Swiper
+          style={{ backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" }}
+          removeClippedSubviews={Platform.OS === "android" ? false : true}
+          loadMinimal={Platform.OS === "android" ? false : true}
+          showsButtons={false}
+          loop={false}
+          paginationStyle={{
+            bottom: 20,
+          }}
+          activeDotColor={isDarkMode ? "#ffffff" : "#000000"}
+          dotColor={isDarkMode ? "#666666" : "#cccccc"}
+          ref={(ref) => {
+            swiperRef.current = ref;
+          }}
         >
-          <Image
-            source={require("../assets/images/onboarding/onboarding1.webp")}
-            style={styles.img}
-          />
-          <Text
+          {/* Slide 1 */}
+          <View
             style={[
-              styles.title,
-              { color: isDarkMode ? "#ffffff" : "#000000" },
+              styles.slide,
+              { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
             ]}
           >
-            Report Civic Issues
-          </Text>
-          <Text
-            style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
-          >
-            JANMARG empowers citizens to report civic issues in their community.
-            From potholes to broken streetlights, help make your city better by
-            reporting problems that need attention.
-          </Text>
-        </View>
-
-        {/* Slide 2 */}
-        <View
-          style={[
-            styles.slide,
-            { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
-          ]}
-        >
-          <Image
-            source={require("../assets/images/onboarding/onboarding2.webp")}
-            style={styles.img}
-          />
-          <Text
-            style={[
-              styles.title,
-              { color: isDarkMode ? "#ffffff" : "#000000" },
-            ]}
-          >
-            Search & Browse
-          </Text>
-          <Text
-            style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
-          >
-            Browse reports in your area and stay informed about ongoing issues.
-            Use the search feature to find specific problems or filter by status
-            to see what's being worked on.
-          </Text>
-        </View>
-
-        {/* Slide 3 */}
-        <View
-          style={[
-            styles.slide,
-            { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
-          ]}
-        >
-          <Image
-            source={require("../assets/images/onboarding/onboarding3.webp")}
-            style={styles.img}
-          />
-          <Text
-            style={[
-              styles.title,
-              { color: isDarkMode ? "#ffffff" : "#000000" },
-            ]}
-          >
-            Track & Engage
-          </Text>
-          <Text
-            style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
-          >
-            Track the progress of your reports and support others by upvoting
-            important issues. View detailed information, see exact locations on
-            maps, and stay updated on resolution status.
-          </Text>
-        </View>
-
-        {/* Slide 4 - Final slide with finish button */}
-        <View
-          style={[
-            styles.slide,
-            { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
-          ]}
-        >
-          <Image
-            source={require("../assets/images/onboarding/onboarding4.webp")}
-            style={styles.img}
-          />
-          <Text
-            style={[
-              styles.title,
-              { color: isDarkMode ? "#ffffff" : "#000000" },
-            ]}
-          >
-            Welcome to JANMARG
-          </Text>
-          <Text
-            style={[styles.text, { color: isDarkMode ? "#cccccc" : "#666666" }]}
-          >
-            Start making a difference in your community today! Report issues,
-            track progress, and collaborate with fellow citizens to build a
-            better city for everyone.
-          </Text>
-
-          <TouchableOpacity
-            style={[
-              styles.finishButton,
-              { backgroundColor: isDarkMode ? "#ffffff" : "#000000" },
-            ]}
-            onPress={handleFinish}
-          >
+            <Image
+              source={require("../assets/images/onboarding/onboarding1.webp")}
+              style={styles.img}
+            />
             <Text
               style={[
-                styles.finishButtonText,
-                { color: isDarkMode ? "#000000" : "#ffffff" },
+                styles.title,
+                { color: isDarkMode ? "#ffffff" : "#000000" },
               ]}
             >
-              Get Started
+              Report Civic Issues
             </Text>
-          </TouchableOpacity>
-        </View>
-      </Swiper>
-    </View>
+            <Text
+              style={[
+                styles.text,
+                { color: isDarkMode ? "#cccccc" : "#666666" },
+              ]}
+            >
+              JANMARG empowers citizens to report civic issues in their
+              community. From potholes to broken streetlights, help make your
+              city better by reporting problems that need attention.
+            </Text>
+          </View>
+
+          {/* Slide 2 */}
+          <View
+            style={[
+              styles.slide,
+              { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
+            ]}
+          >
+            <Image
+              source={require("../assets/images/onboarding/onboarding2.webp")}
+              style={styles.img}
+            />
+            <Text
+              style={[
+                styles.title,
+                { color: isDarkMode ? "#ffffff" : "#000000" },
+              ]}
+            >
+              Search & Browse
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                { color: isDarkMode ? "#cccccc" : "#666666" },
+              ]}
+            >
+              Browse reports in your area and stay informed about ongoing
+              issues. Use the search feature to find specific problems or filter
+              by status to see what's being worked on.
+            </Text>
+          </View>
+
+          {/* Slide 3 */}
+          <View
+            style={[
+              styles.slide,
+              { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
+            ]}
+          >
+            <Image
+              source={require("../assets/images/onboarding/onboarding3.webp")}
+              style={styles.img}
+            />
+            <Text
+              style={[
+                styles.title,
+                { color: isDarkMode ? "#ffffff" : "#000000" },
+              ]}
+            >
+              Track & Engage
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                { color: isDarkMode ? "#cccccc" : "#666666" },
+              ]}
+            >
+              Track the progress of your reports and support others by upvoting
+              important issues. View detailed information, see exact locations
+              on maps, and stay updated on resolution status.
+            </Text>
+          </View>
+
+          {/* Slide 4 - Final slide with finish button */}
+          <View
+            style={[
+              styles.slide,
+              { backgroundColor: isDarkMode ? "#1a1a1a" : "#ffffff" },
+            ]}
+          >
+            <Image
+              source={require("../assets/images/onboarding/onboarding4.webp")}
+              style={styles.img}
+            />
+            <Text
+              style={[
+                styles.title,
+                { color: isDarkMode ? "#ffffff" : "#000000" },
+              ]}
+            >
+              Welcome to JANMARG
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                { color: isDarkMode ? "#cccccc" : "#666666" },
+              ]}
+            >
+              Start making a difference in your community today! Report issues,
+              track progress, and collaborate with fellow citizens to build a
+              better city for everyone.
+            </Text>
+
+            <TouchableOpacity
+              style={[
+                styles.finishButton,
+                { backgroundColor: isDarkMode ? "#ffffff" : "#000000" },
+              ]}
+              onPress={handleFinish}
+            >
+              <Text
+                style={[
+                  styles.finishButtonText,
+                  { color: isDarkMode ? "#000000" : "#ffffff" },
+                ]}
+              >
+                Get Started
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Swiper>
+      </View>
 
       {/* Custom Navigation Buttons */}
       <TouchableOpacity
