@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
+    color: "#000000",
   },
   buttonContainer: {
     width: "100%",

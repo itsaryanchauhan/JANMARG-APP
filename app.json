@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "JANMARG",
+    "slug": "janmarg",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/JANMARG.png",
-    "scheme": "myapp",
+    "scheme": "janmarg",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -15,21 +15,16 @@
       "package": "com.connect.janmarg",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/JANMARG.png",
+        "backgroundImage": "./assets/images/JANMARG.png",
+        "monochromeImage": "./assets/images/JANMARG.png"
       },
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
-      ],
-      "config": {
-        "googleMaps": {
-          "apiKey": "placeholder_key"
-        }
-      }
+      ]
     },
     "web": {
       "output": "static",

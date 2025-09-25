@@ -39,7 +39,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Large pothole on National Highway 32 near Chatra bus stand causing severe vehicle damage. Water logging during monsoon makes it extremely hazardous for two-wheelers.",
     type: "pothole",
-    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
+    imageSource: require("../../assets/images/mock_image/deep_pothole.webp"),
     location: {
       latitude: 24.2084,
       longitude: 84.8717,
@@ -84,7 +84,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Garbage has not been collected from Baba Adam Market area in Deoghar for the past 4 days. With the temple town receiving many visitors, this creates serious hygiene concerns.",
     type: "garbage-issue",
-    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
+    imageSource: require("../../assets/images/mock_image/garbage.webp"),
     location: {
       latitude: 24.4823,
       longitude: 86.6937,
@@ -205,7 +205,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Cars are constantly parked in front of the emergency exit of Green Valley Public Park blocking access for ambulances and fire trucks. This violates safety norms and puts lives at risk.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
+    imageSource: require("../../assets/images/mock_image/traffic_congestion.webp"),
     location: {
       latitude: 28.650834,
       longitude: 77.315245,
@@ -250,7 +250,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "The traffic signal at the main intersection of Commercial Hub has been malfunctioning for 2 days. All lights blink simultaneously causing massive traffic jams and increasing accident risk.",
     type: "traffic",
-    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
+    imageSource: require("../../assets/images/mock_image/traffic_congestion.webp"),
     location: {
       latitude: 28.628912,
       longitude: 77.206523,
@@ -1065,7 +1065,7 @@ export const mockCommunityReports: CommunityReport[] = [
     description:
       "Major water supply pipeline burst in Pratappur area of Chatra. Water scarcity affecting 200+ households. Emergency repair needed before summer season.",
     type: "water-issue",
-    imageSource: require("../../assets/images/mock_image/overflowing_drain.webp"),
+    imageSource: require("../../assets/images/mock_image/broken_water_pipeline.webp"),
     location: {
       latitude: 24.2156,
       longitude: 84.8789,

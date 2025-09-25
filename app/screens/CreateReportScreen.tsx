@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: "#fafafa",
+    color: "#000000",
   },
   textArea: {
     height: 100,

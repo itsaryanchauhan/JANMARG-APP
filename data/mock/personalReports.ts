@@ -33,7 +33,7 @@ export const mockPersonalReports: Report[] = [
     description:
       "Garbage collection has been skipped for the past 3 days in residential area. The bins are overflowing and creating unhygienic conditions.",
     type: "garbage",
-    imageSource: require("../../assets/images/mock_image/broken_road.webp"),
+    imageSource: require("../../assets/images/mock_image/garbage.webp"),
     location: {
       latitude: 23.7958,
       longitude: 86.1511,

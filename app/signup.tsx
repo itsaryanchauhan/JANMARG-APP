@@ -94,6 +94,15 @@ export default function SignupScreen() {
 
           <Animated.View
             entering={FadeInDown.delay(1000).duration(1000).springify()}
+            style={styles.noteContainer}
+          >
+            <Text style={styles.noteText}>
+              Note: This is a demo app. Sign up is not actually processed.
+            </Text>
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(1200).duration(1000).springify()}
             style={styles.linkContainer}
           >
             <Text>Already have an account? </Text>
@@ -164,6 +173,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
+    color: "black",
   },
   buttonContainer: {
     width: "100%",
@@ -179,6 +189,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
+    textAlign: "center",
+  },
+  noteContainer: {
+    backgroundColor: "rgba(0, 0, 0,0 )",
+    padding: 16,
+    borderRadius: 12,
+    width: "100%",
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  noteText: {
+    fontSize: 14,
+    color: "black",
     textAlign: "center",
   },
   linkContainer: {

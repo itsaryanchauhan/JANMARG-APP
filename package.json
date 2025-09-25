@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "janmarg",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -16,12 +16,12 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@react-navigation/native-stack": "^7.3.16",
-    "expo": "~54.0.9",
+    "expo": "~54.0.10",
     "expo-camera": "~17.0.8",
     "expo-image": "~3.0.8",
     "expo-image-picker": "~17.0.8",
     "expo-location": "^19.0.7",
-    "expo-router": "~6.0.7",
+    "expo-router": "~6.0.8",
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",
     "leaflet": "^1.9.4",
@@ -29,13 +29,13 @@
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
     "react-native-gesture-handler": "~2.28.0",
-    "react-native-reanimated": "~4.1.0",
+    "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-super-grid": "^6.0.2",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.21.0",
-    "react-native-webview": "^13.16.0",
+    "react-native-webview": "13.15.0",
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
