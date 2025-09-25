@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useFocusEffect } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React, { useRef } from "react";
 import {
   ScrollView,
@@ -13,6 +14,7 @@ import {
 export default function ProfileScreen() {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const scrollViewRef = useRef<ScrollView>(null);
+  const router = useRouter();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -21,31 +23,37 @@ export default function ProfileScreen() {
     }, [])
   );
 
+  const handleSignOut = () => {
+    // Here you could add any cleanup logic like clearing user data, tokens, etc.
+    // For now, we'll just redirect to the login screen
+    router.replace("/login");
+  };
+
   const profileOptions = [
     {
       icon: "person-outline",
       title: "Edit Profile",
-      subtitle: "Update your personal information",
+      subtitle: "Demo button - feature not implemented yet",
     },
     {
       icon: "notifications-outline",
       title: "Notifications",
-      subtitle: "Manage notification preferences",
+      subtitle: "Demo button - feature not implemented yet",
     },
     {
       icon: "lock-closed-outline",
       title: "Privacy & Security",
-      subtitle: "Control your privacy settings",
+      subtitle: "Demo button - feature not implemented yet",
     },
     {
       icon: "help-circle-outline",
       title: "Help & Support",
-      subtitle: "Get help and contact support",
+      subtitle: "Demo button - feature not implemented yet",
     },
     {
       icon: "document-text-outline",
       title: "Terms & Conditions",
-      subtitle: "Read our terms and policies",
+      subtitle: "Demo button - feature not implemented yet",
     },
     {
       icon: "log-out-outline",
@@ -107,7 +115,11 @@ export default function ProfileScreen() {
       {/* Profile Options */}
       <View style={styles.optionsContainer}>
         {profileOptions.map((option, index) => (
-          <TouchableOpacity key={index} style={styles.optionItem}>
+          <TouchableOpacity 
+            key={index} 
+            style={styles.optionItem}
+            onPress={option.title === "Sign Out" ? handleSignOut : undefined}
+          >
             <View style={styles.optionLeft}>
               <View style={styles.optionIconContainer}>
                 <Ionicons name={option.icon as any} size={24} color="#2E6A56" />

@@ -280,13 +280,13 @@ export default function SearchScreen() {
             <Ionicons name="search-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>Search for Reports</Text>
             <Text style={styles.emptySubtitle}>
-              Enter a report ID like "CR001" or use keywords to find specific
-              reports
+              Enter a report ID like &quot;CR001&quot; or use keywords to find
+              specific reports
             </Text>
             <View style={styles.exampleContainer}>
               <Text style={styles.exampleTitle}>Example searches:</Text>
               <Text style={styles.exampleText}>
-                • CR001 (specific report ID)
+                • &quot;CR001&quot; (specific report ID)
               </Text>
               <Text style={styles.exampleText}>• pothole (issue type)</Text>
               <Text style={styles.exampleText}>• Arjun (reporter name)</Text>
@@ -298,8 +298,8 @@ export default function SearchScreen() {
             <Ionicons name="document-outline" size={64} color="#ccc" />
             <Text style={styles.emptyTitle}>No Reports Found</Text>
             <Text style={styles.emptySubtitle}>
-              No reports match your search "{searchQuery}". Try different
-              keywords or report IDs.
+              No reports match your search &quot;{searchQuery}&quot;. Try
+              different keywords or report IDs.
             </Text>
           </View>
         ) : (

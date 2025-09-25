@@ -21,7 +21,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 export default function OnboardingScreen() {
   const isDarkMode = useColorScheme() === "dark";
   const router = useRouter();
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const swiperRef = useRef<Swiper>(null);
 
   logger.info("OnboardingScreen rendered");
@@ -40,10 +40,6 @@ export default function OnboardingScreen() {
   };
 
   // Calculate responsive dimensions
-  const imageWidth = Math.min(width * 0.85, 350);
-  const imageHeight = Math.min(height * 0.35, 280);
-  const titleFontSize = Math.max(width * 0.06, 24);
-  const textFontSize = Math.max(width * 0.04, 14);
   const buttonSize = Math.max(width * 0.12, 50);
 
   return (
@@ -131,7 +127,7 @@ export default function OnboardingScreen() {
             >
               Browse reports in your area and stay informed about ongoing
               issues. Use the search feature to find specific problems or filter
-              by status to see what's being worked on.
+              by status to see what&apos;s being worked on.
             </Text>
           </View>
 

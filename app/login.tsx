@@ -128,7 +128,7 @@ export default function LoginScreen() {
             entering={FadeInDown.delay(800).duration(1000).springify()}
             style={styles.linkContainer}
           >
-            <Text>Don't have an account? </Text>
+            <Text>Don&apos;t have an account? </Text>
             <Link href="./signup" asChild>
               <TouchableOpacity>
                 <Text style={styles.linkText}>SignUp</Text>

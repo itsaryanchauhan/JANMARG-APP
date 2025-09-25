@@ -104,6 +104,33 @@ export default function ReportDetailModal({
     }
   };
 
+  const getIssueTypeLabel = (type: string) => {
+    switch (type) {
+      case "pothole":
+        return "Pothole";
+      case "broken-streetlight":
+        return "Broken Streetlight";
+      case "garbage":
+        return "Garbage";
+      case "overgrown-weed":
+        return "Overgrown Weed";
+      case "water-issue":
+        return "Water Issue";
+      case "infrastructure":
+        return "Infrastructure";
+      case "traffic":
+        return "Traffic";
+      case "animal-issue":
+        return "Animal Issue";
+      case "encroachment":
+        return "Encroachment";
+      case "garbage-issue":
+        return "Garbage Issue";
+      default:
+        return type.charAt(0).toUpperCase() + type.slice(1).replace("-", " ");
+    }
+  };
+
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -190,6 +217,23 @@ export default function ReportDetailModal({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Description</Text>
             <Text style={styles.description}>{report.description}</Text>
+          </View>
+
+          {/* Issue Type */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Issue Type</Text>
+            <View style={styles.issueTypeContainer}>
+              <View style={styles.issueTypeIcon}>
+                <Ionicons
+                  name={getIssueTypeIcon(report.type) as any}
+                  size={24}
+                  color="#2E6A56"
+                />
+              </View>
+              <Text style={styles.issueTypeText}>
+                {getIssueTypeLabel(report.type)}
+              </Text>
+            </View>
           </View>
 
           {/* Location */}
@@ -706,5 +750,31 @@ const styles = StyleSheet.create({
     color: "#FF6B6B",
     fontWeight: "500",
     marginLeft: 8,
+  },
+  issueTypeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    padding: 12,
+    borderRadius: 8,
+  },
+  issueTypeIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#2E6A56",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  issueTypeText: {
+    fontSize: 16,
+    color: "#4A4A4A",
+    fontWeight: "500",
+  },
+  logoIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
   },
 });

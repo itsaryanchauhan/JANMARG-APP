@@ -797,4 +797,9 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     flex: 1,
   },
+  logoIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
 });

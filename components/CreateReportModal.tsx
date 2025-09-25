@@ -25,7 +25,7 @@ interface CreateReportModalProps {
   onClose: () => void;
 }
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const issueTypes = [
   { value: "pothole", label: "Pothole", icon: "car-outline" },
@@ -72,6 +72,7 @@ export default function CreateReportModal({
   logger.info("CreateReportModal rendered", { visible });
 
   const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIssueType, setSelectedIssueType] = useState<string | null>(
     null
@@ -253,6 +254,12 @@ export default function CreateReportModal({
       selectedArea,
     });
 
+    if (!title.trim()) {
+      logger.warn("Report submission failed: no title");
+      Alert.alert("Error", "Please add a title for your report.");
+      return;
+    }
+
     if (!description.trim()) {
       logger.warn("Report submission failed: no description");
       Alert.alert("Error", "Please add a description for your report.");
@@ -265,15 +272,18 @@ export default function CreateReportModal({
       return;
     }
 
+    if (!currentLocation) {
+      logger.warn("Report submission failed: no location provided");
+      Alert.alert("Error", "Please provide a location for your report. Tap 'Get Current Location' or 'Select Location on Map'.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       // Add report to personal reports context
-      const selectedType = issueTypes.find(
-        (type) => type.value === selectedIssueType
-      );
       addReport({
-        title: selectedType?.label || "Unknown Issue",
+        title: title.trim(),
         description: description.trim(),
         type: selectedIssueType as any,
         imageUri: selectedImage || undefined,
@@ -284,7 +294,7 @@ export default function CreateReportModal({
       // Also add to community reports so it appears in HomeScreen
       const reportArea = selectedWard || selectedArea; // Use selected ward or current selected area
       addCommunityReport({
-        title: selectedType?.label || "Unknown Issue",
+        title: title.trim(),
         description: description.trim(),
         type: selectedIssueType as any,
         imageUri: selectedImage || undefined,
@@ -320,6 +330,7 @@ export default function CreateReportModal({
   };
 
   const resetForm = () => {
+    setTitle("");
     setDescription("");
     setSelectedImage(null);
     setSelectedIssueType(null);
@@ -365,7 +376,7 @@ export default function CreateReportModal({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Issue Type</Text>
             <Text style={styles.sectionSubtitle}>
-              Select the type of issue you're reporting
+              Select the type of issue you&apos;re reporting
             </Text>
 
             <View style={styles.issueTypeGrid}>
@@ -406,8 +417,8 @@ export default function CreateReportModal({
               District Selection (Optional)
             </Text>
             <Text style={styles.sectionSubtitle}>
-              Select your district in Jharkhand if you know it, otherwise we'll
-              detect it automatically
+              Select your district in Jharkhand if you know it, otherwise
+              we&apos;ll detect it automatically
             </Text>
 
             <TouchableOpacity
@@ -507,11 +518,28 @@ export default function CreateReportModal({
             )}
           </View>
 
+          {/* Title Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Report Title</Text>
+            <Text style={styles.sectionSubtitle}>
+              Give your report a clear, descriptive title
+            </Text>
+
+            <TextInput
+              style={styles.titleInput}
+              placeholder="e.g., Broken Streetlight on Main Road"
+              placeholderTextColor="#999"
+              value={title}
+              onChangeText={setTitle}
+              maxLength={100}
+            />
+          </View>
+
           {/* Description Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Description</Text>
             <Text style={styles.sectionSubtitle}>
-              Describe the issue you're reporting
+              Describe the issue you&apos;re reporting
             </Text>
 
             <TextInput
@@ -789,6 +817,15 @@ const styles = StyleSheet.create({
     right: 10,
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
+  },
+  titleInput: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 15,
+    fontSize: 16,
+    color: "#4A4A4A",
+    borderWidth: 1,
+    borderColor: "#e9ecef",
   },
   descriptionInput: {
     backgroundColor: "#FFFFFF",
